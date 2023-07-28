@@ -29,6 +29,19 @@ function TableComp() {
             transaction: 'BTC',
             status: '+0.91%',
             action: '$299.89',
+        },{
+            name: 'Doe',
+            email: 'doe@example.com',
+            transaction: 'BTC',
+            status: '+0.11%',
+            action: '$99.29',
+        },
+        {
+            name: 'TOV',
+            email: 'tov@example.com',
+            transaction: 'BTC',
+            status: '+0.51%',
+            action: '$399.01',
         }
     ];
 
@@ -55,7 +68,7 @@ function TableComp() {
                             <tr key={index}>
                                 <td>
                                     <div className='main-tableicon'>
-                                        <Image src={defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle />
+                                        <Image src={defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style'/>
                                         <large className="large-text">{item.name}</large>
                                     </div>
                                 </td>

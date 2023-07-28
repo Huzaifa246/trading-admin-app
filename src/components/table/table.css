@@ -21,6 +21,13 @@
     background-color: #0b111d !important;
     -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.75);
   }
+  .main-tableicon{
+    display: flex;
+    align-items: center;
+  }
+  .imagetable-style{
+    margin-right: 10px;
+  }
   .table-heading-style {
     color: white;
   }
@@ -28,7 +35,6 @@
     font-size: 20px;
     font-weight: 500;
     color: white;
-    padding-top: 5px;
   }
   .action-heading {
     display: flex;
