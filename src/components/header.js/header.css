@@ -1,0 +1,50 @@
+.main-Nav {
+  background-color: #19212e !important;
+  color: white;
+}
+.navbar-light .navbar-nav .nav-link{
+    color: white;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+.dropdown-menu {
+  min-width: 120px;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.dropdown-item {
+  color: #5d6873;
+  padding: 8px 12px;
+}
+
+.notification-icon {
+  margin-right: 10px;
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+}
+
+.profile-info img {
+  margin-right: 5px;
+}
+.center-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.right-align {
+  margin-right: auto;
+}
+
+.navbar-toggler
+{
+    background-color: white;
+}

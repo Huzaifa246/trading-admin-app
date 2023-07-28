@@ -1,0 +1,106 @@
+@media (min-width: 350px) {
+    .main-login {
+      background: radial-gradient(
+        ellipse at 60% 20%,
+        rgb(33 99 92 / 80%) 0%,
+        rgba(11, 19, 30, 0) 90%,
+        rgba(11, 19, 30, 0) 100%
+      );
+      height: 100vh !important;
+    }
+    .logo-image {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+      object-fit: contain;
+      border: none;
+    }
+    .sigin-logo {
+      height: 30vh;
+      min-height: 20vh;
+    }
+    .form-col {
+      margin-top: 20px;
+      padding: 20px;
+    }
+    .main-inner-form {
+      width: 100% !important;
+    }
+  
+    /* inner input field ke styling */
+    .login-form .form-control {
+      background-color: #00000000 !important;
+      color: #fff;
+      padding: 1.175rem 0.75rem;
+      border-radius: 10px;
+    }
+    .login-form .form-control::placeholder {
+      color: white;
+      background-color: #00000000 !important;
+    }
+    .login-form .form-control:focus {
+      background-color: #00000000 !important;
+      color: #fff;
+      border: 2px solid #27cbe0 !important;
+      box-shadow: none;
+    }
+    .loginbtn-main{
+      width: 100%;
+      margin: auto;
+    }
+    .login-btn {
+      width: 100%;
+      color: white;
+      font-size: 20px;
+      font-weight: 500;
+      background: -webkit-linear-gradient(
+        to right,
+        #373b44,
+        #4286f4
+      ); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(
+        36deg,
+        rgb(27 146 255) 25%,
+        rgb(32, 215, 223) 70%
+      );
+    }
+    .login-pass {
+      color: white;
+      font-size: 20px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  
+    .password-input-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+  
+    .password-toggle-icon {
+      cursor: pointer;
+      position: absolute;
+      right: 18px;
+      top: 46%;
+      transform: translateY(-50%);
+      color: gray;
+      font-size: 18px;
+    }
+    .noaccount {
+      color: white;
+    }
+    .para-noaccount {
+      color: grey;
+      text-align: center;
+    }
+  }
+  
+  .signup-head {
+    text-align: center !important;
+    font-size: 24px !important;
+    font-weight: 600 !important;
+    color: white;
+  }
+  

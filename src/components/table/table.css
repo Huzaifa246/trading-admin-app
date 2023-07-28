@@ -1,0 +1,65 @@
+@media (min-width: 350px) {
+  .table-border-style {
+    margin: 5px 35px 5px 30px;
+  }
+  .table-heading {
+    margin: 0 40px 10px 40px;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+  }
+  .market-heading {
+    font-size: 1.7rem !important;
+  }
+
+  .table-heading span {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  .main-table {
+    width: 100%;
+    background-color: #0b111d !important;
+    -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.75);
+  }
+  .table-heading-style {
+    color: white;
+  }
+  .large-text {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    padding-top: 5px;
+  }
+  .action-heading {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .action-style {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .table > :not(caption) > * > * {
+    background-color: #0b111dca;
+  }
+  .table > tbody {
+    /* vertical-align: inherit; ye default ta */
+    vertical-align: middle;
+  }
+  .small-text {
+    color: rgb(0 251 130);
+    font-weight: 600;
+    display: flex;
+    justify-content: flex-end;
+  }
+  td {
+    border-style: none;
+  }
+  .third-col {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+}
