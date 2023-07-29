@@ -3,14 +3,15 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import bglogo from '../../assets/images/logo.png';
 import "./signup.css";
+import imgg from '../../assets/images/login_bg.png';
 
 function SignUp() {
-      const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         password: '',
         confirmpassword: '',
-      });
+    });
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -18,11 +19,11 @@ function SignUp() {
     const { fullName, email, password, confirmpassword } = formData;
 
     const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData({
-              ...formData,
-              [name]: value,
-            });
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
     };
 
     const togglePasswordVisibility = () => {
@@ -62,78 +63,87 @@ function SignUp() {
     };
 
     return (
-        <section className="vh-100 d-flex flex-column justify-content-center align-items-center main-login">
-            <Container>
-                <div className="text-black d-flex align-items-center justify-content-center sigUp-logo">
-                    <div className="logo-container">
-                        <img src={bglogo} alt="Logo" className="logo-image" />
+
+        <div
+            className="login-card auth-login"
+            style={{
+                backgroundImage: `url(${imgg})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                height: "100vh",
+                width: "100%",
+            }}
+        >
+            <section className="vh-100 d-flex flex-column justify-content-center align-items-center main-login">
+                <Container>
+                    <div className="text-black d-flex align-items-center justify-content-center sigUp-logo">
+                        <div className="logo-container">
+                            <img src={bglogo} alt="Logo" className="logo-image" />
+                        </div>
                     </div>
-                </div>
-                <h2 className='signup-head'>SignUp</h2>
-                <Row>
-                    <Col md={12} lg={6} xl={4} className="form-col d-flex flex-column align-items-center">
-                        <div className="signup-inner-form">
-                            <Form className="login-form" onSubmit={handleSubmit}>
-                                <Form.Group className="mb-4" controlId="formFullName">
-                                    <Form.Control
-                                        className="login-pass"
+                    <div className="Auth-form-container">
+                        <form className="Auth-form" onSubmit={handleSubmit}>
+                            <div className="Auth-form-content">
+                                <h3 className="Auth-form-title">Sign Up</h3>
+                                <div className="Not-yet-style">
+                                    Already have an account?
+                                    <span className="primary-link">
+                                        <a href="/signUp"> Login </a>
+                                    </span>
+                                </div>
+                                <div className="form-group mt-3">
+                                    <label className='label-style'>Full Name</label>
+                                    <input
                                         type="text"
-                                        required
-                                        placeholder="Full Name"
-                                        name="fullName"
-                                        value={fullName}
-                                        onChange={handleChange}
+                                        className="form-control mt-1 form-input-style"
+                                        placeholder="Enter email"
                                     />
-                                </Form.Group>
-                                <Form.Group className="mb-4" controlId="formEmail">
-                                    <Form.Control
-                                        className="login-pass"
+                                </div>
+                                <div className="form-group mt-3">
+                                    <label className='label-style'>Email address</label>
+                                    <input
                                         type="email"
-                                        required
-                                        placeholder="Email address"
-                                        name="email"
-                                        value={email}
-                                        onChange={handleChange}
+                                        className="form-control mt-1 form-input-style"
+                                        placeholder="Enter email"
                                     />
-                                </Form.Group>
-                                <Form.Group className="mb-4" controlId="formPassword">
+                                </div>
+                                <div className="form-group mt-3">
+                                    <label className='label-style' htmlFor="password">Password</label>
                                     <div className="password-input-container">
-                                        <Form.Control
-                                            className="login-pass"
-                                            type={showPassword ? 'text' : 'password'}
-                                            required
-                                            placeholder="Password"
-                                            name="password"
-                                            value={password}
-                                            onChange={handleChange}
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            id="password"
+                                            className="form-control mt-1 form-input-style"
+                                            placeholder="Enter password"
                                         />
-                                        <span className="password-signup-toggle" onClick={togglePasswordVisibility}>
+                                        <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
                                             {showPassword ? <FiEyeOff /> : <FiEye />}
                                         </span>
                                     </div>
-                                </Form.Group>
-                                <Form.Group className="mb-4" controlId="formConfirmPassword">
-                                    <Form.Control
-                                        className="login-pass"
-                                        type="password"
-                                        required
-                                        placeholder="Confirm Password"
-                                        name="confirmpassword"
-                                        value={confirmpassword}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-
-                                <div className="pt-1 mb-4 main-signupbtn">
-                                    <Button variant="info" size="lg" block type="submit" className="login-btn">Sign Up</Button>
                                 </div>
-                                <p className="para-noaccount">Already have an account? <a href="/" className="noaccount">Login</a></p>
-                            </Form>
-                        </div>
-                    </Col>
-                </Row>
-            </Container>
-        </section>
+                                <div className="form-group mt-3">
+                                    <label className='label-style' htmlFor="password">Confirm Password</label>
+                                    <div className="password-input-container">
+                                        <input
+                                            type={"confimpassword"}
+                                            id="password"
+                                            className="form-control mt-1 form-input-style"
+                                            placeholder="Confirm password"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="d-grid gap-2 mt-3">
+                                    <button type="submit" className="btn btn-primary btn-login">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </Container>
+            </section>
+        </div>
     );
 }
 
