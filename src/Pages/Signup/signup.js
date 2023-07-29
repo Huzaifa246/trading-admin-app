@@ -77,7 +77,7 @@ function SignUp() {
         >
             <section className="vh-100 d-flex flex-column justify-content-center align-items-center main-login">
                 <Container>
-                    <div className="text-black d-flex align-items-center justify-content-center sigUp-logo">
+                    <div className="text-black d-flex align-items-center justify-content-center sigUp-logo mb-3">
                         <div className="logo-container">
                             <img src={bglogo} alt="Logo" className="logo-image" />
                         </div>
@@ -89,7 +89,7 @@ function SignUp() {
                                 <div className="Not-yet-style">
                                     Already have an account?
                                     <span className="primary-link">
-                                        <a href="/signUp"> Login </a>
+                                        <a href="/"> Login </a>
                                     </span>
                                 </div>
                                 <div className="form-group mt-3">
