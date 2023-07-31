@@ -4,7 +4,7 @@ import { Table, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine } from '@fortawesome/free-solid-svg-icons';
 import './table.css';
-import { defaultImageUrl } from '../header.js/header';
+import { defaultImageUrl } from '../header/header';
 
 function TableComp() {
     // Sample data for the table rows

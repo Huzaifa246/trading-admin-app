@@ -1,0 +1,43 @@
+/* Sidebar CSS */
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Initially hidden */
+    height: 100vh;
+    width: 250px;
+    background-color: #f8f9fa;
+    transition: left 0.3s ease-in-out; /* Use CSS transition for sliding effect */
+  }
+  
+  #sidebar.active {
+    left: 0; /* Show the sidebar when active class is added */
+  }
+  
+  .sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 9999;
+  }
+  
+  .bar {
+    width: 30px;
+    height: 3px;
+    background-color: #333;
+    margin: 6px 0;
+    transition: 0.4s;
+  }
+  
+  .sidebar-toggle.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+  
+  .sidebar-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+  
+  .sidebar-toggle.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+  
