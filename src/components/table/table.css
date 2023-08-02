@@ -1,12 +1,12 @@
 @media (min-width: 350px) {
   .table-border-style {
     margin: 5px 35px 5px 30px;
+    border: none;
   }
   .table-heading {
     margin: 0 40px 10px 40px;
     display: flex;
     justify-content: space-between;
-    color: white;
   }
   .market-heading {
     font-size: 1.7rem !important;
@@ -18,37 +18,43 @@
   }
   .main-table {
     width: 100%;
-    background-color: #0b111d !important;
-    -webkit-box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.75);
+    background-color: #fff !important;
+    -webkit-box-shadow: 0px 0px 5px 2px rgba(230, 230, 230, 0.75);
+    border-radius: 10px;
   }
-  .main-tableicon{
+  .main-tableicon {
     display: flex;
     align-items: center;
   }
-  .imagetable-style{
+  .imagetable-style {
     margin-right: 10px;
   }
   .table-heading-style {
-    color: white;
+    color: black;
   }
   .large-text {
     font-size: 20px;
     font-weight: 500;
-    color: white;
+    color: black;
   }
   .action-heading {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
   .action-style {
     font-size: 20px;
     font-weight: 500;
-    color: white;
+    color: black;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-evenly;
   }
   .table > :not(caption) > * > * {
-    background-color: #0b111dca;
+    /* background-color: #0b111dca; */
+    border: none;
+    background-color: white;
+  }
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fff;
   }
   .table > tbody {
     /* vertical-align: inherit; ye default ta */
@@ -67,5 +73,14 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+  }
+  .edit-icon {
+    color: rgb(255, 193, 7);
+  }
+  .delete-icon {
+    color: rgb(244, 67, 54);
+  }
+  .view-icon {
+    color: rgb(0, 188, 212);
   }
 }

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Table, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faTrashAlt, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 import './table.css';
 import { defaultImageUrl } from '../header/header';
 
@@ -14,34 +14,34 @@ function TableComp() {
             email: 'john.doe@example.com',
             transaction: 'BTC',
             status: '+0.11%',
-            action: '$999.89',
+            currency: '$999.89',
         },
         {
             name: 'Hunain ',
             email: 'Hunain.ceo@example.com',
             transaction: 'ETH',
             status: '-0.32%',
-            action: '$789.45',
+            currency: '$789.45',
         },
         {
             name: 'Huzaifa ',
             email: 'Huzaifa@example.com',
             transaction: 'BTC',
             status: '+0.91%',
-            action: '$299.89',
-        },{
+            currency: '$299.89',
+        }, {
             name: 'Doe',
             email: 'doe@example.com',
             transaction: 'BTC',
             status: '+0.11%',
-            action: '$99.29',
+            currency: '$99.29',
         },
         {
             name: 'TOV',
             email: 'tov@example.com',
             transaction: 'BTC',
             status: '+0.51%',
-            action: '$399.01',
+            currency: '$399.01',
         }
     ];
 
@@ -60,6 +60,7 @@ function TableComp() {
                             <th>Email</th>
                             <th>Transaction</th>
                             <th>Status</th>
+                            <th>Currency</th>
                             <th className='action-heading'>Action</th>
                         </tr>
                     </thead>
@@ -68,11 +69,11 @@ function TableComp() {
                             <tr key={index}>
                                 <td>
                                     <div className='main-tableicon'>
-                                        <Image src={defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style'/>
+                                        <Image src={defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style' />
                                         <large className="large-text">{item.name}</large>
                                     </div>
                                 </td>
-                                <td style={{ color: 'white' }}>
+                                <td style={{ color: 'black' }}>
                                     <small>{item.email}</small>
                                 </td>
                                 <td>
@@ -82,7 +83,14 @@ function TableComp() {
                                     <large className="large-text">{item.status}</large>
                                 </td>
                                 <td className='third-col'>
-                                    <large className="action-style">{item.action}</large>
+                                    <large className="currency-style">{item.currency}</large>
+                                </td>
+                                <td className='action-col'>
+                                    <large className="action-style">
+                                        <FontAwesomeIcon icon={faEdit} className="edit-icon" />
+                                        <FontAwesomeIcon icon={faTrashAlt} className="delete-icon" />
+                                        <FontAwesomeIcon icon={faEye} className="view-icon" />
+                                    </large>
                                 </td>
                             </tr>
                         ))}
