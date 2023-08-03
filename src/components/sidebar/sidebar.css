@@ -69,7 +69,10 @@
 .its-heading-logo {
   display: flex;
   align-items: center;
-  padding: 15px;
+  /* padding: 15px; */
+  position: fixed;
+  top: 2%;
+  left: 2%;
   z-index: 999;
 }
 
