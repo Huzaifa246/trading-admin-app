@@ -1,32 +1,31 @@
 #sidebar {
   position: fixed;
   top: 0;
-  left: -250px; /* Initially hidden */
+  left: -15%; /* Initially hidden */
   height: 100vh;
-  width: 250px;
+  width: 15%;
   background-color: #19212e;
-  transition: left 0.3s ease-in-out; /* Use CSS transition for sliding effect */
+  transition: 0.4s; /*  Use CSS transition for sliding effect */
+  z-index: 10;
 }
 
 #sidebar.active {
   left: 0;
 }
 .sidebar-icon {
-  /* background: linear-gradient(to right, #62749c, #4286f4); */
   background: #5c61f2;
   padding: 6px;
   margin-right: 10px;
   border-radius: 5px;
-  color: white;
+  color: #fff;
+  -webkit-box-shadow: 0px 0px 5px 1px #5c61f2;
 }
 .sidebar-icon:hover {
-  box-shadow: 0px 0px 5px 2px rgba(255, 255, 255, 0.75);
-  -webkit-box-shadow: 0px 0px 5px 2px rgba(255, 255, 255, 0.75);
-  -moz-box-shadow: 0px 0px 5px 2px rgba(255, 255, 255, 0.75);
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(255, 255, 255, 0.75);
 }
 .sidebar-text {
   color: #fff;
-  transition: all 0.3s ease;
+  /* transition: all 0.3s ease; */
   letter-spacing: 0.7px;
   text-transform: capitalize;
   font-weight: 500;
@@ -46,11 +45,14 @@
   cursor: pointer;
   z-index: 9999;
 }
+.sidebar-toggle.active {
+  left: 12%;
+}
 .sidebar-togglestyle {
   width: 35px;
   height: 35px;
   padding: 5px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: hsl(0deg 0.94% 44.62%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,14 +66,27 @@
   color: #5c61f2;
 }
 
-.sidebar-toggle.active .grid-icon-style:nth-child(1) {
-  transform: rotate(-45deg) translate(-5px, 6px);
+.its-heading-logo {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  z-index: 999;
 }
 
-.sidebar-toggle.active .grid-icon-style:nth-child(2) {
-  opacity: 0;
+.its-logo {
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
+  z-index: 999;
 }
 
-.sidebar-toggle.active .grid-icon-style:nth-child(3) {
-  transform: rotate(45deg) translate(-5px, -6px);
+.its-heading {
+  color: #fff;
+  font-size: 1.5rem;
+  z-index: 999;
+}
+@media (min-width: 950px) and (max-width: 1250px) {
+  .sidebar-toggle.active {
+    left: 11%;
+  }
 }
