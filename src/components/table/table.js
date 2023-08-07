@@ -4,13 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 import './table.css';
 import { defaultImageUrl } from '../header/header';
-import { useSidebar } from '../../store';
 import fetchAllUsers from '../../Services/getAllUser';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Modal, Button } from 'react-bootstrap';
 
 const TableComp = () => {
-    const { isSidebarOpen } = useSidebar();
     const [users, setUsers] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('');
@@ -21,7 +19,6 @@ const TableComp = () => {
     };
 
     const handleConfirmStatusChange = (status) => {
-        //api integrate(later)
         console.log("Changing status to:", status);
         setModalShow(false);
     };
@@ -64,7 +61,6 @@ const TableComp = () => {
                 </Modal.Footer>
             </Modal>
 
-            <div className={`main-table-class ${isSidebarOpen ? 'table-open' : ''}`}>
                 <Card>
                     <div className='table-heading'>
                         <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>User List</span>
@@ -120,7 +116,6 @@ const TableComp = () => {
                         </Table>
                     </div>
                 </Card>
-            </div>
         </>
     );
 }

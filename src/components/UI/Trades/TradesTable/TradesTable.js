@@ -5,6 +5,8 @@ import { crossImg } from '../../../imagesImport';
 import fetchAllTradeOption from '../../../../Services/getAllTradeOption';
 import fetchCurrentUserTrade from '../../../../Services/getCurrentUserTrade';
 import Loader from '../../../Loader/Loader';
+import ReleaseTradeApi from '../../../../Services/ReleaseTradeApi';
+import { formatDateTime } from '../../../../Services/DataFormat/DateFormat';
 
 
 const TradesTable = () => {
@@ -18,6 +20,11 @@ const TradesTable = () => {
     const [totalInvestment, setTotalInvestment] = useState(0);
     const [totalInvestors, setTotalInvestors] = useState(0);
 
+    const [showResultModal, setShowResultModal] = useState(false);
+
+    const [releaseError, setReleaseError] = useState(null); // State to hold release error
+    const [releaseSuccess, setReleaseSuccess] = useState(false);
+
     const openReleaseModal = () => {
         setShowModal(true);
     };
@@ -27,14 +34,50 @@ const TradesTable = () => {
     };
 
     const handleProfitSubmit = () => {
+
         console.log('Profit Percentage:', profitPercentage);
         setShowConfirmationModal(true);
         closeReleaseModal();
+        return (profitPercentage);
     };
-    const confirmRelease = () => {
-        console.log('Confirmed release');
-        setShowConfirmationModal(false);
+    const confirmRelease = async () => {
+        try {
+            const userId = dataCurrentUserT[0]?.userId;
+            if (!userId) {
+                console.error('No user data available.');
+                return;
+            }
+
+            // Check if profitPercentage is valid and not negative
+            if (profitPercentage <= 0) {
+                console.error('Invalid profit percentage.');
+                return;
+            }
+            console.log('Sending request with data:', {
+                userId,
+                profitPercentage,
+                selectedOption
+            });
+
+            const releaseResponse = await ReleaseTradeApi(userId, profitPercentage, selectedOption);
+            setShowConfirmationModal(false);
+            if (releaseResponse.success) {
+                setReleaseSuccess(true); // Set success flag
+                setReleaseError(null); // Clear any previous error
+            } else {
+                setReleaseSuccess(false); // Clear success flag
+                setReleaseError("Error releasing profit"); // Set error message
+            }
+            return releaseResponse;
+        } catch (error) {
+            console.error('Error releasing profit:', error);
+            setReleaseError("Error releasing profit"); // Set error message
+            setReleaseSuccess(false);
+        }
+        setShowModal(false); // Close the input modal
+        setShowResultModal(true); // Open the result modal
     };
+
     const cancelRelease = () => {
         setShowConfirmationModal(false);
     };
@@ -63,14 +106,14 @@ const TradesTable = () => {
             if (selectedOption !== "" && selectedOption) {
                 setIsLoading(true);
                 const currentUserTradeData = await fetchCurrentUserTrade(selectedOption);
-                const userObjectsArray = currentUserTradeData?.data?.send?.map(item => item.user) || [];
+                const userObjectsArray = currentUserTradeData?.data?.send?.map(item => item?.user) || [];
 
                 // Calculate total investment and total investors
                 const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
                 setTotalInvestment(totalInv);
                 setTotalInvestors(userObjectsArray.length);
 
-                console.log("users", userObjectsArray);
+                // console.log("users", userObjectsArray);
                 setDataCurrentUserT(userObjectsArray);
                 setIsLoading(false);
 
@@ -79,9 +122,7 @@ const TradesTable = () => {
         fetchData();
     }, [selectedOption]);
 
-    console.log(dataCurrentUserT, "data")
-    console.log(selectedOption, "opt")
-
+    console.log(dataCurrentUserT, "user data")
 
     return (
         <>
@@ -126,20 +167,34 @@ const TradesTable = () => {
                 </Modal.Footer>
             </Modal>
 
+            <Modal show={showResultModal} onHide={() => setShowResultModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Release Result</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {releaseSuccess && (
+                        <div className="success-message">
+                            Profit released successfully!
+                        </div>
+                    )}
+                    {releaseError && (
+                        <div className="error-message">
+                            {releaseError}
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={() => setShowResultModal(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <div style={{ marginTop: "6rem" }}>
 
             </div>
             <Card style={{ margin: "0 30px" }}>
                 <div className='buttons-container'>
-                    {/* <Button className='btn-trades-style' variant="warning" >
-                        Gold
-                    </Button>
-                    <Button className='btn-trades-style' variant="secondary">
-                        Silver
-                    </Button>
-                    <Button className='btn-trades-style' variant="danger">
-                        Oil
-                    </Button> */}
                     {tradeOptions?.map((option, index) => (
                         <Button
                             key={index}
@@ -163,6 +218,18 @@ const TradesTable = () => {
                     <div className='table-heading'>
                         <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Traders List</span>
                     </div>
+                    {releaseError && (
+                        <div className="error-message">
+                            {releaseError}
+                        </div>
+                    )}
+
+                    {/* Show success message if releaseSuccess is true */}
+                    {releaseSuccess && (
+                        <div className="success-message">
+                            Profit released successfully!
+                        </div>
+                    )}
                     <div className='table-border-style'>
                         {isLoading ? (
                             <Loader />
@@ -175,34 +242,28 @@ const TradesTable = () => {
                                             id="checkbox-select-all"
                                             style={{ textAlign: "center", marginTop: "10px" }}
                                         />
-                                        <th>Date & Time</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Amount</th>
-                                        <th style={{ textAlign: "center" }}>Action</th>
+                                        <th className='th-trades-class'>Name</th>
+                                        <th className='th-trades-class'>Email</th>
+                                        <th className='th-trades-class'>Amount</th>
+                                        <th className='th-trades-class'>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {dataCurrentUserT?.map((item, index) => (
+                                    {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
                                         <tr key={index}>
                                             <td style={{ textAlign: "center" }}>
                                                 <Form.Check type="checkbox" id={`checkbox-${index}`} />
                                             </td>
-                                            <td style={{ color: 'black' }}>
-                                                <small>{item.dt || ""}</small>
+                                            <td className='td-TradTable'>
+                                                <large className="large-text">{item?.userFullName || ""}</large>
                                             </td>
-                                            <td>
-                                                <div className='main-tableicon'>
-                                                    <large className="large-text">{item?.userFullName || ""}</large>
-                                                </div>
-                                            </td>
-                                            <td style={{ color: 'black' }}>
+                                            <td style={{ color: 'black' }} className='td-TradTable'>
                                                 <small>{item?.email}</small>
                                             </td>
-                                            <td className='third-col'>
+                                            <td className='td-TradTable'>
                                                 <large className="currency-style">{item?.trades?.total_investment || ''}</large>
                                             </td>
-                                            <td className='action-col'>
+                                            <td className='action-col td-TradTable'>
                                                 <large className="action-style">
                                                     <Button variant="danger" onClick={openReleaseModal}>
                                                         Release
@@ -215,6 +276,36 @@ const TradesTable = () => {
                             </Table>
                         )}
                     </div>
+                </Card>
+                <Card>
+                    <div className='table-heading'>
+                        <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Past Investment</span>
+                    </div>
+                    <Table striped className='main-table'>
+                        <thead className='table-heading-style'>
+                            <tr>
+                                <th className='th-trades-class'>Name</th>
+                                <th className='th-trades-class'>Past Investment</th>
+                                <th className='th-trades-class'>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tradeOptions?.map((option, index) => (
+                                <tr key={index}>
+                                    <td className='td-TradTable'>
+                                        <large className="large-text">{option?.name || ""}</large>
+                                    </td>
+                                    <td style={{ color: 'black' }} className='td-TradTable'>
+                                        <small>{option?.pastInvestment}</small>
+                                    </td>
+                                    <td className='td-TradTable'>
+                                        <large className="currency-style">{formatDateTime(option?.createdAt) || ''}</large>
+
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </Card>
             </div>
         </>

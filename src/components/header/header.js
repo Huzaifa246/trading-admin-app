@@ -16,7 +16,8 @@ const HeaderComponent = () => {
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
     const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+        // setIsSidebarOpen(!isSidebarOpen);
+        setIsSidebarOpen(true)
     };
 
     const toggleUserDropdown = () => {

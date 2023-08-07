@@ -1,128 +1,123 @@
-@media (min-width: 350px) {
-  .table-border-style {
-    margin: 5px 35px 5px 30px;
-    border: none;
-  }
-  .card {
-    border: none;
-  }
-  .table-heading {
-    margin: 20px 40px 10px 40px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .market-heading {
-    font-size: 1.7rem !important;
-  }
+.table-border-style {
+  margin: 5px 35px 5px 30px;
+  border: none;
+}
+.card {
+  border: none;
+}
+.table-heading {
+  margin: 20px 40px 10px 40px;
+  display: flex;
+  justify-content: space-between;
+}
+.market-heading {
+  font-size: 1.7rem !important;
+}
 
-  .table-heading span {
-    font-size: 1.4rem;
-    font-weight: 600;
-  }
-  .main-table {
-    width: 100%;
-    background-color: #fff !important;
-  }
-  .main-tableicon {
-    display: flex;
-    align-items: center;
-  }
-  .imagetable-style {
-    margin-right: 10px;
-  }
-  .table-heading-style {
-    color: black;
-  }
-  .large-text {
-    font-size: 16px;
-    font-weight: 500;
-    color: black;
-  }
-  .action-heading {
-    display: flex;
-    justify-content: center;
-  }
-  .action-style {
-    font-size: 20px;
-    font-weight: 500;
-    color: black;
-    display: flex;
-    justify-content: space-evenly;
-  }
-  table thead th {
-    vertical-align: bottom;
-    border-bottom: none !important;
-  }
-  .table > :not(caption) > * > * {
-    /* background-color: #0b111dca; */
-    border: none;
-    background-color: white;
-  }
-  .table-striped tbody tr:nth-of-type(odd) {
-    background-color: #fff;
-  }
-  .table > tbody {
-    /* vertical-align: inherit; ye default ta */
-    vertical-align: middle;
-  }
-  .small-text {
-    color: rgb(0 251 130);
-    font-weight: 600;
-    display: flex;
-    justify-content: flex-end;
-  }
-  td {
-    border-style: none;
-  }
-  .third-col {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .trades-table-class {
-    width: 100%;
-    padding: 0 30px;
-  }
-  .table-open {
-    width: 85%;
-    /* overflow-x: scroll; */
-    overflow: scroll;
-    margin-left: auto;
-    margin-top: 6rem;
-  }
-  .buttons-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
-  .btn-trades-style {
-    margin: 0 10px;
-    min-width: 60px;
-  }
-  .main-total-style {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-  }
-  .cross-style {
-    width: 20px;
-    height: 20px;
-    margin: 10px 0;
-  }
-  /* center modal */
-  .modal-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 400px;
-    width: auto;
-  }
-  .fade {
-    transition: none;
-  }
-  .modal.fade .modal-dialog {
-    transition: none;
-  }
+.table-heading span {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.main-table {
+  width: 100%;
+  background-color: #fff !important;
+}
+.imagetable-style {
+  margin-right: 10px;
+}
+.table-heading-style {
+  color: black;
+}
+.large-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+}
+.action-heading {
+  display: flex;
+  justify-content: center;
+}
+.action-style {
+  font-size: 20px;
+  font-weight: 500;
+  color: black;
+  display: flex;
+  justify-content: space-evenly;
+}
+table thead th {
+  vertical-align: bottom;
+  border-bottom: none !important;
+}
+.table > :not(caption) > * > * {
+  /* background-color: #0b111dca; */
+  border: none;
+  background-color: white;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #fff;
+}
+.table > tbody {
+  /* vertical-align: inherit; ye default ta */
+  vertical-align: middle;
+}
+.small-text {
+  color: rgb(0 251 130);
+  font-weight: 600;
+  display: flex;
+  justify-content: flex-end;
+}
+td {
+  border-style: none;
+}
+.trades-table-class {
+  width: 100%;
+  padding: 0 30px;
+}
+.table-open {
+  width: 85%;
+  /* overflow-x: scroll; */
+  overflow: scroll;
+  margin-left: auto;
+  margin-top: 6rem;
+}
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.btn-trades-style {
+  margin: 0 10px;
+  min-width: 60px;
+}
+.main-total-style {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+.cross-style {
+  width: 20px;
+  height: 20px;
+  margin: 10px 0;
+}
+/* center modal */
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 400px;
+  width: auto;
+}
+.fade {
+  transition: none;
+}
+.modal.fade .modal-dialog {
+  transition: none;
+}
+.th-trades-class {
+  text-align: center;
+}
+.td-trades-table {
+  text-align: center;
 }
