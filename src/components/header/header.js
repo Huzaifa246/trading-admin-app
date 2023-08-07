@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSlidersH, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
 import './header.css'; // Import the custom CSS file
 import Sidebar from '../sidebar/sidebar';
 import { logoutImg, userImg, settingImg } from '../imagesImport';
 import { useSidebar } from '../../store';
+import { Outlet } from 'react-router-dom';
 
 export const defaultImageUrl = 'https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png';
 
-const Header = () => {
+const HeaderComponent = () => {
     // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -55,8 +56,9 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleSidebar} />
             </Navbar>
             <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/> 
+            <Outlet/>
         </>
     );
 };
 
-export default Header;
+export default HeaderComponent;

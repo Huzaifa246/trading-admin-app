@@ -3,7 +3,7 @@
     margin: 5px 35px 5px 30px;
     border: none;
   }
-  .card{
+  .card {
     border: none;
     border-radius: 20px;
   }
@@ -28,13 +28,10 @@
     display: flex;
     align-items: center;
   }
-  .imagetable-style {
-    margin-right: 10px;
-  }
   .table-heading-style {
     color: black;
   }
-  .large-text {
+  .large-text-IT {
     font-size: 16px;
     font-weight: 500;
     color: black;
@@ -80,24 +77,12 @@
     justify-content: center;
     flex-direction: column;
   }
-  .edit-icon {
-    color: rgb(255, 193, 7);
-    height: 15px;
-  }
-  .delete-icon {
-    color: rgb(244, 67, 54);
-    height: 15px;
-  }
-  .view-icon {
-    color: rgb(0, 188, 212);
-    height: 15px;
-  }
-  .main-table-class{
+  .main-table-class {
     width: 100%;
     padding: 0 30px;
     margin-top: 6rem;
   }
-  .table-open{
+  .table-open {
     width: 85%;
     /* overflow-x: scroll; */
     overflow: scroll;
@@ -111,8 +96,15 @@
     border: none;
     cursor: pointer;
   }
-  
+
   .btn-close:hover {
     color: red;
+  }
+  th,
+  td {
+    text-align: center;
+  }
+  .First-heading{
+    text-align: start;
   }
 }

@@ -25,12 +25,23 @@
 }
 .sidebar-text {
   color: #fff;
-  /* transition: all 0.3s ease; */
   letter-spacing: 0.7px;
   text-transform: capitalize;
   font-weight: 500;
+  transition: color 0.3s ease;
 }
-.sidebar-text:hover {
+/* Add styles for active links */
+.active-link .sidebar-text {
+  color: #5c61f2;
+}
+
+/* Add styles for inactive links */
+.main-sidebar .sidebar-text {
+  color: #fff;
+}
+
+/* Modify the .sidebar-text:hover styles */
+.main-sidebar .sidebar-text:hover {
   color: #5c61f2;
 }
 .main-sidebar {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
-import './sidebar.css'; // Import the custom CSS file
-import { userImg,itsLogo } from '../imagesImport';
+import { faTachometerAlt, faUsers, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import './sidebar.css';
+import { itsLogo } from '../imagesImport';
 
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
@@ -19,7 +19,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         <>
             {isToggleActive && (
                 <div className="its-heading-logo">
-                    {/* <img src={userImg} alt="ITS Logo" className="its-logo" /> */}
                     <img src={itsLogo} alt="ITS Logo" className="its-logo"/>
                     <h1 className="its-heading">ITS</h1>
                 </div>
@@ -27,16 +26,29 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             <nav id="sidebar" className={isSidebarOpen ? "active" : ""}>
                 <div className="p-4" style={{ marginTop: "50px" }}>
                     <ul className="list-unstyled">
-                        <Nav.Link href="/dashboard" className="mb-2 main-sidebar">
+                        {/* <Nav.Link href="/dashboard" activeClassName="active-link" className="mb-2 main-sidebar">*/}
+                        <Nav.Link href="/dashboard" className={`mb-2 main-sidebar ${window.location.pathname === '/dashboard' ? 'active-link' : ''}`}>
                             <FontAwesomeIcon icon={faTachometerAlt} className="me-2 sidebar-icon" />
                             <span className='sidebar-text'>
                                 Dashboard
                             </span>
                         </Nav.Link>
-                        <Nav.Link href="/" className="mb-2 main-sidebar">
+                        <Nav.Link href="/" className={`mb-2 main-sidebar ${window.location.pathname === '/' ? 'active-link' : ''}`}>
                             <FontAwesomeIcon icon={faUsers} className="me-2 sidebar-icon" />
                             <span className='sidebar-text'>
                                 Users
+                            </span>
+                        </Nav.Link>
+                        <Nav.Link href="/traders" className={`mb-2 main-sidebar ${window.location.pathname === '/traders' ? 'active-link' : ''}`}>
+                            <FontAwesomeIcon icon={faUsers} className="me-2 sidebar-icon" />
+                            <span className='sidebar-text'>
+                                Traders
+                            </span>
+                        </Nav.Link>
+                        <Nav.Link href="/investment" className={`mb-2 main-sidebar ${window.location.pathname === '/investment' ? 'active-link' : ''}`}>
+                            <FontAwesomeIcon icon={faMoneyBill} className="me-2 sidebar-icon" />
+                            <span className='sidebar-text'>
+                                Investment
                             </span>
                         </Nav.Link>
                     </ul>

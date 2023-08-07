@@ -3,9 +3,8 @@
     margin: 5px 35px 5px 30px;
     border: none;
   }
-  .card{
+  .card {
     border: none;
-    border-radius: 20px;
   }
   .table-heading {
     margin: 20px 40px 10px 40px;
@@ -80,39 +79,50 @@
     justify-content: center;
     flex-direction: column;
   }
-  .edit-icon {
-    color: rgb(255, 193, 7);
-    height: 15px;
-  }
-  .delete-icon {
-    color: rgb(244, 67, 54);
-    height: 15px;
-  }
-  .view-icon {
-    color: rgb(0, 188, 212);
-    height: 15px;
-  }
-  .main-table-class{
+  .trades-table-class {
     width: 100%;
     padding: 0 30px;
-    margin-top: 6rem;
   }
-  .table-open{
+  .table-open {
     width: 85%;
     /* overflow-x: scroll; */
     overflow: scroll;
     margin-left: auto;
     margin-top: 6rem;
   }
-  .btn-close {
-    font-size: 1.5rem;
-    padding: 0.5rem;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+  .buttons-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
   }
-  
-  .btn-close:hover {
-    color: red;
+  .btn-trades-style {
+    margin: 0 10px;
+    min-width: 60px;
+  }
+  .main-total-style {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  .cross-style {
+    width: 20px;
+    height: 20px;
+    margin: 10px 0;
+  }
+  /* center modal */
+  .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    width: auto;
+  }
+  .fade {
+    transition: none;
+  }
+  .modal.fade .modal-dialog {
+    transition: none;
   }
 }

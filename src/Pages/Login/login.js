@@ -45,12 +45,6 @@ function LoginForm() {
                             <form className="Auth-form" onSubmit={handleSubmit}>
                                 <div className="Auth-form-content">
                                     <h3 className="Auth-form-title">Sign In</h3>
-                                    <div className="Not-yet-style">
-                                        Not registered yet?
-                                        <span className="primary-link">
-                                            <a href="/signUp"> Sign Up</a>
-                                        </span>
-                                    </div>
                                     <div className="form-group mt-3">
                                         <label className='label-style'>Email address</label>
                                         <input
@@ -73,14 +67,14 @@ function LoginForm() {
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="d-grid gap-2 mt-3">
+                                    <div className="d-grid gap-2 mt-3 mb-3">
                                         <button type="submit" className="btn btn-primary btn-login">
                                             Submit
                                         </button>
                                     </div>
-                                    <p className="text-right mt-2">
+                                    {/* <p className="text-right mt-2">
                                         <a href="#">Forgot password?</a>
-                                    </p>
+                                    </p> */}
                                 </div>
                             </form>
                         </div>
