@@ -99,6 +99,28 @@
   font-size: 1.5rem;
   z-index: 999;
 }
+/* Add this to your existing CSS file */
+.submenu {
+  display: none;
+  padding-left: 20px;
+  transition: max-height 0.3s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.submenu-open {
+  display: block;
+  max-height: 500px; /* Adjust this value as needed */
+}
+
+.submenu-item {
+  padding-left: 10px;
+}
+
+.submenu-icon {
+  font-size: 1.5rem;
+}
+
 @media (min-width: 950px) and (max-width: 1250px) {
   .sidebar-toggle.active {
     left: 11%;

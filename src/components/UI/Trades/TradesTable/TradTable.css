@@ -42,7 +42,7 @@
   font-weight: 500;
   color: black;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: end !important;
 }
 table thead th {
   vertical-align: bottom;
@@ -87,7 +87,7 @@ td {
 }
 .btn-trades-style {
   margin: 0 10px;
-  min-width: 60px;
+  min-width: 65px;
 }
 .main-total-style {
   display: flex;
@@ -117,6 +117,10 @@ td {
 }
 .th-trades-class {
   text-align: center;
+}
+.th-trades-action{
+  text-align: end;
+  padding-right: 25px !important;
 }
 .td-trades-table {
   text-align: center;

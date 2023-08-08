@@ -6,12 +6,13 @@ import './header.css'; // Import the custom CSS file
 import Sidebar from '../sidebar/sidebar';
 import { logoutImg, userImg, settingImg } from '../imagesImport';
 import { useSidebar } from '../../store';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 export const defaultImageUrl = 'https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png';
 
 const HeaderComponent = () => {
     // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const navigate = useNavigate()
     const { isSidebarOpen, setIsSidebarOpen } = useSidebar();
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
 
@@ -32,21 +33,24 @@ const HeaderComponent = () => {
                         <FontAwesomeIcon icon={faSlidersH} className="notification-icon" />
                         <FontAwesomeIcon icon={faBell} className="notification-icon" />
                         <div className="user-icon" onClick={toggleUserDropdown}>
-                            <FontAwesomeIcon icon={faUser} className='user-icon'/>
+                            <FontAwesomeIcon icon={faUser} className='user-icon' />
                             {isUserDropdownOpen && (
                                 <div className="dropdown-menu show-on-hover">
                                     <a class="dropdown-item" href="/dashboard">
-                                        <img src={userImg} alt="user"  className='list-img-icons'/>
+                                        <img src={userImg} alt="user" className='list-img-icons' />
                                         Account
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/">
-                                        <img src={settingImg} alt="user"  className='list-img-icons'/>
+                                        <img src={settingImg} alt="user" className='list-img-icons' />
                                         Settings
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/">
-                                        <img src={logoutImg} alt="user"  className='list-img-icons'/>
+                                    <a class="dropdown-item" onClick={() => {
+                                        localStorage.removeItem("token")
+                                        navigate("/")
+                                    }}>
+                                        <img src={logoutImg} alt="user" className='list-img-icons' />
                                         Logout
                                     </a>
                                 </div>
@@ -56,8 +60,8 @@ const HeaderComponent = () => {
                 </Navbar.Collapse>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleSidebar} />
             </Navbar>
-            <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/> 
-            <Outlet/>
+            <Sidebar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+            <Outlet />
         </>
     );
 };

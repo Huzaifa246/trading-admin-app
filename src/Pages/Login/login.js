@@ -1,25 +1,76 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import './login.css';
 import bglogo from '../../assets/images/logo.png';
 import imgg from '../../assets/images/login_bg.png';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { decryption, encryption } from '../../Services/encryptionDecryption';
+import AuthSession from './../../Services/getAuthSessions';
+import Loader from '../../components/Loader/Loader';
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginForm() {
+    const navigate = useNavigate()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
+    const [loginError, setLoginError] = useState("")
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-    };
+
+        if (!email || !password) {
+            setLoginError("Invalid Email or Password")
+            return
+        }
+        setShowLoader(true)
+        const credentials = {
+            email: email,
+            password: password
+        }
+        const encrypted = await encryption(credentials)
+        console.log(encrypted, "encrypted data")
+
+        axios.post(`https://itsapp-3606ea51973b.herokuapp.com/api/admin/login`, {
+            data: encrypted
+        },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(async (res) => {
+                console.log(res, "res")
+                const decrypted = await decryption(res.data.data)
+                console.log(decrypted)
+                localStorage.setItem("token", decrypted?.data)
+                const result = await AuthSession();
+                console.log(result, "Authsession")
+                if (result) {
+                    setShowLoader(false)
+                    navigate("/dashboard")
+                }
+                else {
+                    setShowLoader(false)
+                    window.location.reload();
+                    navigate("/login")
+                }
+            })
+            .catch(err => {
+                const decrypted = decryption(err.response.data.data)
+                if (decrypted?.message.includes("admin not found.")) {
+                    setLoginError("Invalid Credentials")
+                    setShowLoader(false)
+                }
+                setShowLoader(false)
+            })
+    }
 
     return (
         <>
@@ -47,11 +98,9 @@ function LoginForm() {
                                     <h3 className="Auth-form-title">Sign In</h3>
                                     <div className="form-group mt-3">
                                         <label className='label-style'>Email address</label>
-                                        <input
-                                            type="email"
+                                        <input type="email" name="email" id="email" placeholder='abc@xyz.com'
                                             className="form-control mt-1 form-input-style"
-                                            placeholder="Enter email"
-                                        />
+                                            value={email} onChange={(e) => setEmail(e.target.value)} />
                                     </div>
                                     <div className="form-group mt-3">
                                         <label className='label-style' htmlFor="password">Password</label>
@@ -61,6 +110,8 @@ function LoginForm() {
                                                 id="password"
                                                 className="form-control mt-1 form-input-style"
                                                 placeholder="Enter password"
+                                                value={password} onChange={e => setPassword(e.target.value)}
+                                                required
                                             />
                                             <span className="password-toggle-icon" onClick={togglePasswordVisibility}>
                                                 {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -69,12 +120,19 @@ function LoginForm() {
                                     </div>
                                     <div className="d-grid gap-2 mt-3 mb-3">
                                         <button type="submit" className="btn btn-primary btn-login">
-                                            Submit
+                                            Login
                                         </button>
                                     </div>
-                                    {/* <p className="text-right mt-2">
-                                        <a href="#">Forgot password?</a>
-                                    </p> */}
+                                    {
+                                        showLoader
+                                        &&
+                                        <Loader />
+                                    }
+                                    {
+                                        loginError
+                                        &&
+                                        <p style={{ margin: "1rem 0 0", color: "red", textAlign: "center" }}>{loginError}</p>
+                                    }
                                 </div>
                             </form>
                         </div>

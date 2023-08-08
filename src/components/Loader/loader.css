@@ -1,35 +1,13 @@
-.nfLoader {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    margin: 37px 0 0 -25px;
-    width: 100px;
-    height: 100px;
-  }
-  .nfLoader:after {
-    content: "";
-    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK5vSEYJTsFfLvX99amMhZ6Q1xrvUBDrXbt2IbZkfp64FnCE_Up5laDUmThqjFBX_MJdg&usqp=CAU");
-    background-repeat: no-repeat;
-    background-position-x: 50%;
-    background-position-y: 50%;
-    -moz-background-size: 100%;
-    -o-background-size: 100%;
-    background-size: 100%;
-    position: absolute;
-    margin: -6px;
-    width: inherit;
-    height: inherit;
-    animation: nfLoader-spin 1.1s linear infinite, 1 !important;
-    -webkit-animation: nfLoader-spin 1.1s linear infinite, 1 !important;
-  }
-  @keyframes nfLoader-spin {
-    100% {
-      transform: rotate(360deg);
+  .loader-animation {
+    animation: rotate 1000ms linear forwards infinite;
+}
+
+@keyframes rotate {
+    from {
+        rotate: 0deg;
     }
-  }
-  @-webkit-keyframes nfLoader-spin {
-    100% {
-      -webkit-transform: rotate(360deg);
+
+    from {
+        rotate: -360deg;
     }
-  }
-  
+}
