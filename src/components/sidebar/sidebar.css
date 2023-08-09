@@ -111,6 +111,7 @@
 .submenu-open {
   display: block;
   max-height: 500px; /* Adjust this value as needed */
+  transition: max-height 0.3s ease-in-out;
 }
 
 .submenu-item {

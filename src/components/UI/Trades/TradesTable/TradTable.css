@@ -4,8 +4,9 @@
 }
 .card {
   border: none;
+  -webkit-box-shadow: 0px 0px 5px 1px rgb(242 236 236 / 75%) !important;
 }
-.table-heading {
+.table-TT-Past {
   margin: 20px 40px 10px 40px;
   display: flex;
   justify-content: space-between;
@@ -14,7 +15,7 @@
   font-size: 1.7rem !important;
 }
 
-.table-heading span {
+.table-TT-Past span {
   font-size: 1.4rem;
   font-weight: 600;
 }
@@ -83,17 +84,33 @@ td {
 .buttons-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px;
 }
 .btn-trades-style {
   margin: 0 10px;
   min-width: 65px;
 }
+.btn-trades-style:active{
+  -webkit-box-shadow: 0px 0px 5px 1px rgba(0,123,255,0.75);
+}
 .main-total-style {
   display: flex;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 9px;
+  position: relative;
+  transition: 0.25s;
+}
+.total-card {
+  background: rgb(227 226 226);
+  box-shadow: none;
+  color: rgb(0 0 0);
   align-items: center;
-  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 7px;
+  position: relative;
+  transition: 0.25s;
 }
 .cross-style {
   width: 20px;
@@ -118,10 +135,49 @@ td {
 .th-trades-class {
   text-align: center;
 }
-.th-trades-action{
+.th-trades-action {
   text-align: end;
   padding-right: 25px !important;
 }
 .td-trades-table {
   text-align: center;
+}
+.trade-option-card {
+  -webkit-box-shadow: 0px 0px 5px 1px rgb(242 236 236 / 75%);
+  margin: 50px 30px;
+}
+/* search bar */
+.has-search {
+  position: relative;
+  padding: 10px 0;
+  margin-top: auto;
+}
+
+.form-control-feedback {
+  position: absolute;
+  left: 10px; /* Adjust the value as needed */
+  top: 50%;
+  transform: translateY(-50%);
+}
+.form-control {
+  padding-left: 40px; /* Adjust the value to provide enough space for the icon */
+}
+.main-bar-calendar {
+  display: flex;
+  align-items: baseline;
+}
+.calender-icon-style {
+  color: white;
+  background: radial-gradient(
+    circle at 10% 20%,
+    rgb(75, 108, 183) 0%,
+    rgb(55, 82, 141) 90%
+  );
+  margin-top: 10px;
+}
+.calender-icon-style svg {
+  margin: 5px;
+}
+.calender-icon-style svg:hover {
+  color: #fff;
 }

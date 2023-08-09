@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Card, Button, Form, Modal } from 'react-bootstrap';
 import './TradTable.css';
+import React,
+{
+    useState, useEffect,
+    Table, Card, Button,
+    Form, Modal, FontAwesomeIcon,
+    faSearch
+}
+    from "../../../../Services/Imports/ImportsItems"
 import { crossImg } from '../../../imagesImport';
 import fetchAllTradeOption from '../../../../Services/getAllTradeOption';
 import fetchCurrentUserTrade from '../../../../Services/getCurrentUserTrade';
 import Loader from '../../../Loader/Loader';
 import ReleaseTradeApi from '../../../../Services/ReleaseTradeApi';
-import { formatDateTime } from '../../../../Services/DataFormat/DateFormat';
 import fetchPastUserTrade from '../../../../Services/getPastUserTrade';
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import { DateRange } from 'react-date-range';
+import { Calendar } from "react-feather";
 
 const TradesTable = () => {
     const [showModal, setShowModal] = useState(false);
@@ -18,6 +27,8 @@ const TradesTable = () => {
     const [tradeOptions, setTradeOptions] = useState([]);
     const [dataCurrentUserT, setDataCurrentUserT] = useState([]);
     const [selectedOption, setSelectedOption] = useState("gold");
+    const [isButtonActive, setIsButtonActive] = useState(false);
+
     const [isLoading, setIsLoading] = useState(false);
     const [totalInvestment, setTotalInvestment] = useState(0);
     const [totalInvestors, setTotalInvestors] = useState(0);
@@ -34,6 +45,23 @@ const TradesTable = () => {
     const [selectAll, setSelectAll] = useState(false);
 
     const [pastUserTradeData, setPastUserTradeData] = useState([]);
+
+    const [selectedRange, setSelectedRange] = useState({
+        selection: {
+            startDate: new Date(),
+            endDate: null,
+            key: 'selection',
+        },
+    });
+    const [showCalendar, setShowCalendar] = useState(false);
+
+    const handleCalendarClick = () => {
+        setShowCalendar(!showCalendar);
+    };
+
+    const handleDateChange = (ranges) => {
+        setSelectedRange(ranges.selection);
+    };
 
     useEffect(() => {
         if (releaseSuccess) {
@@ -131,6 +159,7 @@ const TradesTable = () => {
 
     const handleOptionClick = async (optionName) => {
         setSelectedOption(optionName);
+        setIsButtonActive(true);
         setIsLoading(true);
         const currentUserTradeData = await fetchCurrentUserTrade(optionName);
         setDataCurrentUserT(currentUserTradeData);
@@ -349,44 +378,68 @@ const TradesTable = () => {
             <div style={{ marginTop: "6rem" }}>
 
             </div>
-            <Card style={{ margin: "0 30px" }}>
+            <Card className='trade-option-card'>
                 <div className='buttons-container'>
                     {tradeOptions?.map((option, index) => (
                         <Button
                             key={index}
-                            className={`btn-trades-style ${selectedOption === option.name ? 'active' : ''}`}
-                            variant={selectedOption === option.name ? '#5c61f2' : 'primary'}
+                            className={`btn-trades-style ${selectedOption === option.name && isButtonActive? 'active' : ''}`}
+                            variant={selectedOption === option.name ? 'primary' : 'outline-primary'}
                             onClick={() => handleOptionClick(option.name)}
                         >
                             {option.name}
                         </Button>
                     ))}
                 </div>
-
-
-                <div className='main-total-style' style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', padding: '10px' }}>
-                    <div>Total Investors: {totalInvestors}</div>
-                    <div>Total Amount: ${totalInvestment}</div>
-                </div>
             </Card>
             <div className="trades-table-class">
                 <Card>
                     <div className='table-heading'>
                         <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Traders List</span>
-                        <span>
-                            {dataCurrentUserT.length > 0 && selectedItems.length === dataCurrentUserT.length && (
-                                <Button
-                                    variant="primary"
-                                    onClick={releaseAll}
+                        <div className='main-total-style'>
+                            <div className='total-card'>Total Investors: {totalInvestors}</div>
+                            <div className='total-card'>Total Amount: ${totalInvestment}</div>
+                        </div>
+                        <div className='main-bar-calendar'>
+                            <div class="form-group has-search">
+                                <span className="form-control-feedback">
+                                    <FontAwesomeIcon icon={faSearch} style={{ color: "#c9c8c8" }} />
+                                </span>
+                                <input type="text" class="form-control" placeholder="Search" />
+                            </div>
+                            <div>
+                                <div
+                                    className="btn btn-link p-0 date-range-picker-button position-relative d-flex align-items-end justify-content-end calender-icon-style"
+                                    onClick={handleCalendarClick}
                                 >
-                                    Release All
-                                </Button>
-                            )}
-                        </span>
+                                    <Calendar />
+                                </div>
+                                {showCalendar && (
+                                    <div className="position-absolute w-100 date-range-picker-overlay p-1" style={{ zIndex: "9999" }}>
+                                        <DateRange
+                                            editableDateInputs={true}
+                                            onChange={handleDateChange}
+                                            moveRangeOnFirstSelection={false}
+                                            direction="vertical"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
+                    <span>
+                        {dataCurrentUserT.length > 0 && selectedItems.length === dataCurrentUserT.length && (
+                            <Button
+                                variant="primary"
+                                onClick={releaseAll}
+                            >
+                                Release All
+                            </Button>
+                        )}
+                    </span>
                     {releaseError && (
                         <div className="error-message">
-                            {releaseError}
+                            <b> {releaseError} </b>
                         </div>
                     )}
 
@@ -414,6 +467,7 @@ const TradesTable = () => {
                                                 />
                                             ))}
                                         </th>
+                                        <th className='th-trades-class'>Date</th>
                                         <th className='th-trades-class'>Name</th>
                                         <th className='th-trades-class'>Email</th>
                                         <th className='th-trades-class'>Amount</th>
@@ -430,6 +484,9 @@ const TradesTable = () => {
                                                     checked={selectedItems.includes(index)}
                                                     onChange={() => handleCheckboxChange(index)}
                                                 />
+                                            </td>
+                                            <td style={{ color: 'black' }} className='td-TradTable'>
+                                                <small></small>
                                             </td>
                                             <td className='td-TradTable'>
                                                 <large className="large-text">{item?.userFullName || ""}</large>
@@ -460,21 +517,51 @@ const TradesTable = () => {
                     </div>
                 </Card>
                 <Card>
-                    <div className='table-heading'>
+                    <div className='table-TT-Past'>
                         <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Past Investment</span>
+                        <div className='main-bar-calendar'>
+                            <div class="form-group has-search">
+                                <span className="form-control-feedback">
+                                    <FontAwesomeIcon icon={faSearch} style={{ color: "#c9c8c8" }} />
+                                </span>
+                                <input type="text" class="form-control" placeholder="Search" />
+                            </div>
+                            <div>
+                                <div
+                                    className="btn btn-link p-0 date-range-picker-button position-relative d-flex align-items-end justify-content-end calender-icon-style"
+                                    onClick={handleCalendarClick}
+                                >
+                                    <Calendar />
+                                </div>
+                                {showCalendar && (
+                                    <div className="position-absolute w-100 date-range-picker-overlay p-1" style={{ zIndex: "9999" }}>
+                                        <DateRange
+                                            editableDateInputs={true}
+                                            onChange={handleDateChange}
+                                            moveRangeOnFirstSelection={false}
+                                            direction="vertical"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                     <Table striped className='main-table'>
                         <thead className='table-heading-style'>
                             <tr>
+                                <th className='th-trades-class'>Date</th>
                                 <th className='th-trades-class'>Name</th>
                                 <th className='th-trades-class'>Email</th>
                                 <th className='th-trades-class'>Past Investment</th>
-                                <th className='th-trades-class'>Date</th>
+                                <th className='th-trades-class'>Profit Percentage</th>
                             </tr>
                         </thead>
                         <tbody>
                             {Array.isArray(pastUserTradeData) && pastUserTradeData.map((item, index) => (
                                 <tr key={index}>
+                                    <td className='td-TradTable'>
+                                        {/* <large className="currency-style">{formatDateTime(item?.createdAt) || ''}</large> */}
+                                    </td>
                                     <td className='td-TradTable'>
                                         <large className="large-text">{item?.userFullName || ""}</large>
                                     </td>
@@ -484,8 +571,8 @@ const TradesTable = () => {
                                     <td style={{ color: 'black' }} className='td-TradTable'>
                                         <small>{item?.pastInvestment}</small>
                                     </td>
-                                    <td className='td-TradTable'>
-                                        {/* <large className="currency-style">{formatDateTime(item?.createdAt) || ''}</large> */}
+                                    <td style={{ color: 'black' }} className='td-TradTable'>
+                                        <small></small>
                                     </td>
                                 </tr>
                             ))}

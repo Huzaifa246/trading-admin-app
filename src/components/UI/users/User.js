@@ -1,23 +1,20 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Header from './../../header/header';
-// import TableComp from './../../table/table';
+import "./user.css";
 import { useSidebar } from '../../../store';
-import "./dashboard.css";
+import UserTableComp from '../../table/table';
+import HeaderComponent from '../../header/header';
 
-function Dashboard() {
+function User() {
   const { isSidebarOpen } = useSidebar();
   return (
     <>
       <div className={`main-table-class ${isSidebarOpen ? 'user-table-open' : ''}`}>
-        {/* <Header />
-        <TableComp /> */}
-        <h1>
-          DASHBOARD
-        </h1>
+        <HeaderComponent />
+        <UserTableComp />
       </div>
     </>
   )
 }
 
-export default Dashboard;
+export default User;
