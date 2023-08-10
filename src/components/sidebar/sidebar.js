@@ -45,12 +45,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                                 Users
                             </span>
                         </Nav.Link>
-                        {/* <Nav.Link href="/traders" className={`mb-2 main-sidebar ${window.location.pathname === '/traders' ? 'active-link' : ''}`}>
-                            <FontAwesomeIcon icon={faUsers} className="me-2 sidebar-icon" />
-                            <span className='sidebar-text'>
-                                Traders
-                            </span>
-                        </Nav.Link> */}
                         <Nav.Link
                             className={`mb-2 main-sidebar`}
                             onClick={handleToggleSubMenu}

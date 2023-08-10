@@ -91,3 +91,6 @@ label {
 .label-style{
     color: #898989;
 }
+.form-control{
+  margin-left: 0 !important;
+}

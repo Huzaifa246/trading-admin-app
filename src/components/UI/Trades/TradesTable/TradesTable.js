@@ -12,10 +12,10 @@ import fetchAllTradeOption from '../../../../Services/getAllTradeOption';
 import fetchCurrentUserTrade from '../../../../Services/getCurrentUserTrade';
 import Loader from '../../../Loader/Loader';
 import ReleaseTradeApi from '../../../../Services/ReleaseTradeApi';
-import fetchPastUserTrade from '../../../../Services/getPastUserTrade';
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
-import { DateRange } from 'react-date-range';
+import { addDays } from "date-fns";
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
+import { DateRangePicker, DateRange } from "react-date-range";
 import { Calendar } from "react-feather";
 
 const TradesTable = () => {
@@ -44,14 +44,10 @@ const TradesTable = () => {
     const [releaseSuccess, setReleaseSuccess] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
 
-    const [pastUserTradeData, setPastUserTradeData] = useState([]);
-
     const [selectedRange, setSelectedRange] = useState({
-        selection: {
-            startDate: new Date(),
-            endDate: null,
-            key: 'selection',
-        },
+        startDate: new Date(),
+        endDate: null,
+        key: "selection",
     });
     const [showCalendar, setShowCalendar] = useState(false);
 
@@ -62,7 +58,6 @@ const TradesTable = () => {
     const handleDateChange = (ranges) => {
         setSelectedRange(ranges.selection);
     };
-
     useEffect(() => {
         if (releaseSuccess) {
             const timeoutId = setTimeout(() => {
@@ -74,15 +69,6 @@ const TradesTable = () => {
             };
         }
     }, [releaseSuccess]);
-    useEffect(() => {
-        async function fetchData() {
-            const pastUserTradeData = await fetchPastUserTrade(selectedOption);
-            const userObjectsArray = pastUserTradeData?.data?.send?.map(item => item?.user) || [];
-            setPastUserTradeData(userObjectsArray);
-            console.log(pastUserTradeData, "Past")
-        }
-        fetchData();
-    }, [selectedOption]);
     const toggleSelectAll = () => {
         setSelectAll(!selectAll);
         setSelectedItems(selectAll ? [] : [...Array(dataCurrentUserT.length).keys()]);
@@ -383,7 +369,7 @@ const TradesTable = () => {
                     {tradeOptions?.map((option, index) => (
                         <Button
                             key={index}
-                            className={`btn-trades-style ${selectedOption === option.name && isButtonActive? 'active' : ''}`}
+                            className={`btn-trades-style ${selectedOption === option.name && isButtonActive ? 'active' : ''}`}
                             variant={selectedOption === option.name ? 'primary' : 'outline-primary'}
                             onClick={() => handleOptionClick(option.name)}
                         >
@@ -405,30 +391,44 @@ const TradesTable = () => {
                                 <span className="form-control-feedback">
                                     <FontAwesomeIcon icon={faSearch} style={{ color: "#c9c8c8" }} />
                                 </span>
-                                <input type="text" class="form-control" placeholder="Search" />
+                                <input type="text" class="form-control search-form" placeholder="Search" />
                             </div>
-                            <div>
+                            <div
+                                className="btn btn-link p-0 date-range-picker-button position-relative d-flex justify-content-end calender-icon-style"
+                                onClick={handleCalendarClick}
+                            >
+                                <Calendar />
+                            </div>
+                            {showCalendar && (
                                 <div
-                                    className="btn btn-link p-0 date-range-picker-button position-relative d-flex align-items-end justify-content-end calender-icon-style"
-                                    onClick={handleCalendarClick}
+                                    className="position-absolute date-range-picker-overlay p-1 mt-5"
+                                    style={{ zIndex: "9999", right: "0" }}
                                 >
-                                    <Calendar />
+                                    <DateRange
+                                        editableDateInputs={true}
+                                        ranges={[selectedRange]}
+                                        minDate={addDays(new Date(), -30)}
+                                        maxDate={addDays(new Date(), 30)}
+                                        onChange={handleDateChange}
+                                        moveRangeOnFirstSelection={false}
+                                        direction="vertical"
+                                    // showDateDisplay={false} // Add this prop to hide date display
+                                    // showSelectionPreview={false} // Add this prop to hide selection preview
+                                    />
                                 </div>
-                                {showCalendar && (
-                                    <div className="position-absolute w-100 date-range-picker-overlay p-1" style={{ zIndex: "9999" }}>
-                                        <DateRange
-                                            editableDateInputs={true}
-                                            onChange={handleDateChange}
-                                            moveRangeOnFirstSelection={false}
-                                            direction="vertical"
-                                        />
-                                    </div>
-                                )}
-                            </div>
+                            )}
                         </div>
                     </div>
-                    <span>
-                        {dataCurrentUserT.length > 0 && selectedItems.length === dataCurrentUserT.length && (
+                    <div className='Rel-All-style'>
+                        {/* {dataCurrentUserT.length > 0 && selectedItems.length === dataCurrentUserT.length && (
+                            <Button
+                                variant="primary"
+                                onClick={releaseAll}
+                            >
+                                Release All
+                            </Button>
+                        )} */}
+                        {dataCurrentUserT.length > 0 && selectedItems.length > 1 && (
                             <Button
                                 variant="primary"
                                 onClick={releaseAll}
@@ -436,7 +436,7 @@ const TradesTable = () => {
                                 Release All
                             </Button>
                         )}
-                    </span>
+                    </div>
                     {releaseError && (
                         <div className="error-message">
                             <b> {releaseError} </b>
@@ -499,10 +499,17 @@ const TradesTable = () => {
                                             </td>
                                             <td className='action-col td-TradTable'>
                                                 <large className="action-style">
-                                                    <Button
+                                                    {/* <Button
                                                         variant="danger"
                                                         onClick={openReleaseModal}
                                                         disabled={selectAll || !selectedItems.includes(index)}
+                                                    >
+                                                        Release
+                                                    </Button> */}
+                                                    <Button
+                                                        variant="danger"
+                                                        onClick={() => openReleaseModal(index)}
+                                                        disabled={selectAll || !selectedItems.includes(index) || selectedItems.length > 1}
                                                     >
                                                         Release
                                                     </Button>
@@ -516,69 +523,7 @@ const TradesTable = () => {
                         )}
                     </div>
                 </Card>
-                <Card>
-                    <div className='table-TT-Past'>
-                        <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Past Investment</span>
-                        <div className='main-bar-calendar'>
-                            <div class="form-group has-search">
-                                <span className="form-control-feedback">
-                                    <FontAwesomeIcon icon={faSearch} style={{ color: "#c9c8c8" }} />
-                                </span>
-                                <input type="text" class="form-control" placeholder="Search" />
-                            </div>
-                            <div>
-                                <div
-                                    className="btn btn-link p-0 date-range-picker-button position-relative d-flex align-items-end justify-content-end calender-icon-style"
-                                    onClick={handleCalendarClick}
-                                >
-                                    <Calendar />
-                                </div>
-                                {showCalendar && (
-                                    <div className="position-absolute w-100 date-range-picker-overlay p-1" style={{ zIndex: "9999" }}>
-                                        <DateRange
-                                            editableDateInputs={true}
-                                            onChange={handleDateChange}
-                                            moveRangeOnFirstSelection={false}
-                                            direction="vertical"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <Table striped className='main-table'>
-                        <thead className='table-heading-style'>
-                            <tr>
-                                <th className='th-trades-class'>Date</th>
-                                <th className='th-trades-class'>Name</th>
-                                <th className='th-trades-class'>Email</th>
-                                <th className='th-trades-class'>Past Investment</th>
-                                <th className='th-trades-class'>Profit Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Array.isArray(pastUserTradeData) && pastUserTradeData.map((item, index) => (
-                                <tr key={index}>
-                                    <td className='td-TradTable'>
-                                        {/* <large className="currency-style">{formatDateTime(item?.createdAt) || ''}</large> */}
-                                    </td>
-                                    <td className='td-TradTable'>
-                                        <large className="large-text">{item?.userFullName || ""}</large>
-                                    </td>
-                                    <td className='td-TradTable'>
-                                        <large className="large-text">{item?.email || ""}</large>
-                                    </td>
-                                    <td style={{ color: 'black' }} className='td-TradTable'>
-                                        <small>{item?.pastInvestment}</small>
-                                    </td>
-                                    <td style={{ color: 'black' }} className='td-TradTable'>
-                                        <small></small>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </Card>
+
             </div>
         </>
     );

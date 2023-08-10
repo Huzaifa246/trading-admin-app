@@ -5,7 +5,7 @@
   }
   .user-table-open{
     width: 85% !important;
-    overflow: scroll;
+    /* overflow: scroll; */
     margin-left: auto;
     margin-top: 6rem;
   }

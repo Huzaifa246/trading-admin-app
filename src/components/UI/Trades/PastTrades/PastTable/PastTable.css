@@ -1,0 +1,44 @@
+
+@media(min-width: 1300px) and (max-width: 1500px){
+    .calendar-below{
+      left: 60%;
+    }
+  }
+  @media(min-width: 1300px) and (max-width: 1500px){
+    .calendar-below{
+      left: 65%;
+    }
+  }
+  @media(min-width: 1501px) and (max-width: 1600px){
+    .calendar-below{
+      left: 70%;
+    }
+  }
+  @media(min-width: 1601px) and (max-width: 1700px){
+    .calendar-below{
+      left: 70%;
+    }
+  }
+  @media(min-width: 1701px) and (max-width: 1900px){
+    .calendar-below{
+      left: 70%;
+    }
+  }
+  @media(min-width: 1901px) and (max-width: 2000px){
+    .calendar-below{
+      left: 75%;
+    }
+  }
+  @media(min-width: 2001px) and (max-width: 2200px){
+    .calendar-below{
+      left: 75%;
+    }
+  }
+  @media(min-width: 2201px) and (max-width: 2400px){
+    .calendar-below{
+      left: 75%;
+    }
+  }
+  .custom-date-range-picker .rdrDefinedRangesWrapper .rdrInputRanges {
+    display: none;
+}

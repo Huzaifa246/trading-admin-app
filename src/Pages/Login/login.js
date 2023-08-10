@@ -59,14 +59,19 @@ function LoginForm() {
                 else {
                     setShowLoader(false)
                     window.location.reload();
-                    navigate("/login")
+                    return navigate("/login")
                 }
             })
-            .catch(err => {
-                const decrypted = decryption(err.response.data.data)
-                if (decrypted?.message.includes("admin not found.")) {
-                    setLoginError("Invalid Credentials")
-                    setShowLoader(false)
+            .catch(async (err) => {
+                const decrypted = await decryption(err.response.data.data)
+                console.log(decrypted.message, "das")
+                if (decrypted?.message.includes("Admin Not Found.")) {
+                    setLoginError("Invalid Credentials, Please Check email.")
+                } else if (decrypted?.message.includes("Admin password is wrong.")) {
+                    setLoginError("Invalid Password, Please Check Your Password.")
+                }
+                else {
+                    setLoginError("An error occurred, Check Credentials");
                 }
                 setShowLoader(false)
             })
