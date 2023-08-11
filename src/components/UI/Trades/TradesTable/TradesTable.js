@@ -45,7 +45,7 @@ const TradesTable = () => {
     const [selectAll, setSelectAll] = useState(false);
 
     const [selectedRange, setSelectedRange] = useState({
-        startDate: new Date(),
+        startDate: null,
         endDate: null,
         key: "selection",
     });
