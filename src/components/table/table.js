@@ -11,9 +11,12 @@ import adminActiveUser from '../../Services/getActiveUser';
 import adminInActiveUser from '../../Services/getInActiveUser';
 import Loader from '../Loader/Loader';
 import deleteUserByAdmin from '../../Services/deleteUserByAdmin';
+import ViewUserDetails from '../../Services/getViewUserDetails';
 
 const UserTableComp = () => {
     const [users, setUsers] = useState([]);
+    const [viewUsers, setViewUsers] = useState([]);
+    const [viewModalShow, setViewModalShow] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [delModalShow, setDelModalShow] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState('');
@@ -21,6 +24,7 @@ const UserTableComp = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1); // Add state for the current page
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedUserViewDetails, setSelectedUserViewDetails] = useState(null);
     const [selectedUserIdToDelete, setSelectedUserIdToDelete] = useState(null);
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -93,6 +97,20 @@ const UserTableComp = () => {
             setIsLoading(false);
         }
     };
+    const handleViewUser = async (userId) => {
+        try {
+            setIsLoading(true);
+            const userDetailsResponse = await ViewUserDetails(userId);
+            const userDetails = userDetailsResponse.data;
+            console.log(userDetails)
+            setSelectedUserViewDetails(userDetails);
+            setViewModalShow(true);
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error Viewing user:', error);
+            setIsLoading(false);
+        }
+    };
     //  const usersArr = users.data;
     // for (const user of users) {
     //     console.log(user._id, "User id");
@@ -135,10 +153,43 @@ const UserTableComp = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <Modal show={viewModalShow} onHide={() => setViewModalShow(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>User Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedUserViewDetails && (
+                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
+                             <p><b>Name:</b></p>
+                             <p>{selectedUserViewDetails.fullName}</p>
+                         </div>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
+                             <p><b>Email:</b></p>
+                             <p>{selectedUserViewDetails.email}</p>
+                         </div>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
+                             <p><b>Total Balance:</b></p>
+                             <p>{selectedUserViewDetails.totalbalance}</p>
+                         </div>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
+                             <p><b>Withdrawable:</b></p>
+                             <p>{selectedUserViewDetails.withdrawable}</p>
+                         </div>
+                     </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setViewModalShow(false)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
 
             <Card>
                 <div className='table-heading'>
-                    <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>User List</span>
+                    <span style={{ textAlign: 'left', paddingRight: '0' }} className='market-heading'>User List</span>
                     <div className='main-bar-calendar'>
                         <div class="form-group has-search">
                             <span className="form-control-feedback">
@@ -214,7 +265,12 @@ const UserTableComp = () => {
                                                         setSelectedUserIdToDelete(item._id); // Set the selectedUserIdToDelete
                                                     }}
                                                 />
-                                                <FontAwesomeIcon icon={faEye} className="view-icon" />
+                                                <FontAwesomeIcon
+                                                    icon={faEye}
+                                                    className="view-icon"
+                                                    onClick={() => handleViewUser(item._id)}
+                                                />
+
                                             </large>
                                         </td>
                                     </tr>
