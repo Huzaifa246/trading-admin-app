@@ -26,7 +26,7 @@ const TradesTable = () => {
 
     const [tradeOptions, setTradeOptions] = useState([]);
     const [dataCurrentUserT, setDataCurrentUserT] = useState([]);
-    const [selectedOption, setSelectedOption] = useState("gold");
+    const [selectedOption, setSelectedOption] = useState("silver");
     const [isButtonActive, setIsButtonActive] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -103,7 +103,7 @@ const TradesTable = () => {
     };
     const confirmRelease = async () => {
         try {
-            const userId = dataCurrentUserT[0]?.userId;
+            const userId = dataCurrentUserT[selectedItems]?.userId;
             if (!userId) {
                 console.error('No user data available.');
                 return;
@@ -142,16 +142,6 @@ const TradesTable = () => {
     const cancelRelease = () => {
         setShowConfirmationModal(false);
     };
-
-    const handleOptionClick = async (optionName) => {
-        setSelectedOption(optionName);
-        setIsButtonActive(true);
-        setIsLoading(true);
-        const currentUserTradeData = await fetchCurrentUserTrade(optionName);
-        setDataCurrentUserT(currentUserTradeData);
-        setIsLoading(false);
-    };
-
     const handleCheckboxChange = (index) => {
         if (selectedItems.includes(index)) {
             setSelectedItems(selectedItems.filter(itemIndex => itemIndex !== index));
@@ -161,7 +151,8 @@ const TradesTable = () => {
         // Also update the selectAll state based on the selectedItems
         setSelectAll(selectedItems.length === dataCurrentUserT.length);
     };
-    //fetching options from api
+
+        //fetching options from api
     useEffect(() => {
         async function fetchData() {
             const decryptedData = await fetchAllTradeOption();
@@ -170,28 +161,42 @@ const TradesTable = () => {
         }
         fetchData();
     }, []);
-
+    const handleOptionClick = async (optionName) => {
+        setSelectedOption(optionName);
+        setIsButtonActive(true);
+        setIsLoading(true);
+        const response = await fetchCurrentUserTrade(optionName);        
+        const currentUserTradeData = response?.data?.send?.map(item => item?.user) || [];
+        setDataCurrentUserT(currentUserTradeData);
+        setIsLoading(false);
+    };
 
     useEffect(() => {
         async function fetchData() {
-            if (selectedOption !== "" && selectedOption) {
-                setIsLoading(true);
-                const currentUserTradeData = await fetchCurrentUserTrade(selectedOption);
-                const userObjectsArray = currentUserTradeData?.data?.send?.map(item => item?.user) || [];
+            let startDate = null;
+            let endDate = null;
 
-                // Calculate total investment and total investors
-                const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
-                setTotalInvestment(totalInv);
-                setTotalInvestors(userObjectsArray.length);
-
-                // console.log("users", userObjectsArray);
-                setDataCurrentUserT(userObjectsArray);
-                setIsLoading(false);
-
+            if (selectedRange.startDate) {
+                startDate = selectedRange.startDate.toISOString().split('T')[0];
             }
+
+            if (selectedRange.endDate) {
+                endDate = selectedRange.endDate.toISOString().split('T')[0];
+            }
+            setIsLoading(true);
+            const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, startDate, endDate);
+            const userObjectsArray = currentUserTradeData?.data?.send?.map(item => item?.user) || [];
+            // Calculate total investment and total investors
+            const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
+            setTotalInvestment(totalInv);
+            setTotalInvestors(userObjectsArray.length);
+
+            // console.log("users", userObjectsArray);
+            setDataCurrentUserT(userObjectsArray);
+            setIsLoading(false);
         }
         fetchData();
-    }, [selectedOption]);
+    }, [selectedOption, selectedRange]);
 
     const releaseAll = () => {
         openProfitModal();
@@ -256,11 +261,11 @@ const TradesTable = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <p>Are you sure you want to release all of following users' profits?</p>
-                    <ul style={{ listStyle: "none", paddingLeft: "10px" }}>
+                    {/* <ul style={{ listStyle: "none", paddingLeft: "10px" }}>
                         {selectedItems.map(index => (
                             <li key={index}>{dataCurrentUserT[index]?.userFullName || ""}</li>
                         ))}
-                    </ul>
+                    </ul> */}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={cancelRelease}>
@@ -373,7 +378,7 @@ const TradesTable = () => {
                             variant={selectedOption === option.name ? 'primary' : 'outline-primary'}
                             onClick={() => handleOptionClick(option.name)}
                         >
-                            {option.name}
+                            {option.name.toUpperCase()}
                         </Button>
                     ))}
                 </div>

@@ -64,16 +64,17 @@ const UserTableComp = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const decryptedData = await fetchAllUsers(currentPage); // Pass the current page as a parameter
+                const decryptedData = await fetchAllUsers(currentPage, searchQuery); // Pass the current page and search query as parameters
                 setUsers(decryptedData.data);
                 console.log(decryptedData, "data")
+                setTotalPages(decryptedData.totalPages);
             } catch (error) {
                 console.error('Error fetching and decrypting data:', error);
             }
         };
 
         fetchData();
-    }, [currentPage]);
+    }, [currentPage, searchQuery]);
 
     const getStatusLabel = (status) => {
         return status === "active" ? "Inactive" : "Active";
@@ -177,18 +178,18 @@ const UserTableComp = () => {
                                         <td>
                                             <div className='main-tableicon'>
                                                 <Image src={item?.profile_image?.url || defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style' />
-                                                <large className="large-text">{item.fullName}</large>
+                                                <large className="large-text">{item?.fullName}</large>
                                             </div>
                                         </td>
                                         <td style={{ color: 'black' }}>
-                                            <small>{item.email}</small>
+                                            <small>{item?.email}</small>
                                         </td>
                                         <td>
                                             {/* You need to get the correct data property for the 'transaction' */}
-                                            <large className="large-text">{item.totalbalance}</large>
+                                            <large className="large-text">{item?.totalbalance.toFixed(2)}</large>
                                         </td>
                                         <td className='third-col'>
-                                            <large className="currency-style">{item.investmentBalance}</large>
+                                            <large className="currency-style">{item?.totalreferral}</large>
                                         </td>
                                         <td className='active-user-style'>
                                             <DropdownButton title={(item.status)}
@@ -222,7 +223,6 @@ const UserTableComp = () => {
                             <tfoot>
                                 <tr>
                                     <td colSpan="6" className="text-center">
-                                        {/* Assuming the API returns total pages count */}
                                         {Array.from({ length: totalPages }).map((_, index) => (
                                             <Button
                                                 key={index}

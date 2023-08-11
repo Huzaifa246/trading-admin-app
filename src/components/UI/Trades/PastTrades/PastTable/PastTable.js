@@ -5,29 +5,34 @@ import { DateRangePicker, DateRange } from "react-date-range";
 import React,
 {
     useState, useEffect,
-    Table, Card, FontAwesomeIcon,Button,
+    Table, Card, FontAwesomeIcon, Button,
     faSearch
 }
     from "../../../../../Services/Imports/ImportsItems"
+import "./PastTable.css"
+import Pagination from 'react-bootstrap/Pagination';
 import fetchAllTradeOption from './../../../../../Services/getAllTradeOption';
 import { Calendar } from "react-feather";
 import fetchPastUserTrade from "../../../../../Services/getPastUserTrade";
 import Loader from '../../../../Loader/Loader';
+import { formatDateTime } from './../../../../../Services/DataFormat/DateFormat';
 
 function PastTable() {
     const [tradeOptions, setTradeOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState("gold");
+    const [selectedOption, setSelectedOption] = useState("silver");
     const [pastUserTradeData, setPastUserTradeData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [isButtonActive, setIsButtonActive] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1); // Initialize with the starting page
+    const [totalPages, setTotalPages] = useState(1);
 
     const filteredPastUsers = pastUserTradeData.filter(user =>
         user?.fullName && user?.fullName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     const [selectedRange, setSelectedRange] = useState({
-        startDate: new Date(),
+        startDate: null,
         endDate: null,
         key: "selection",
     });
@@ -45,44 +50,47 @@ function PastTable() {
         async function fetchData() {
             const decryptedData = await fetchAllTradeOption();
             setTradeOptions(decryptedData.data);
-            console.log(decryptedData.data)
+            // console.log(decryptedData.data)
         }
         fetchData();
     }, []);
 
-    
+
     const handleOptionClick = async (optionName) => {
         setSelectedOption(optionName);
+        setPageNumber(1);
         setIsButtonActive(true);
         setIsLoading(true);
-    
-        const response = await fetchPastUserTrade(optionName);
-        const pastUserTradeData = response?.data?.send || [];
+
+        const response = await fetchPastUserTrade(optionName, 1);
+        const pastUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
+        console.log(pastUserTradeData)
         setPastUserTradeData(pastUserTradeData);
-    
+
         setIsLoading(false);
     };
-    
-    useEffect(() => {
-        async function fetchData() {
-            let startDate = null;
-            let endDate = null;
 
-            if (selectedRange.startDate) {
-                startDate = selectedRange.startDate.toISOString().split('T')[0];
-            }
-
-            if (selectedRange.endDate) {
-                endDate = selectedRange.endDate.toISOString().split('T')[0];
-            }
-
-            const response = await fetchPastUserTrade(selectedOption, startDate, endDate);
-            const pastUserTradeData = response?.data?.send || [];
-            // setPastUserTradeData(pastUserTradeData);
-            // console.log(pastUserTradeData, "Past");
+useEffect(() => {
+    async function fetchData() {
+        let startDate = null;
+        let endDate = null;
+        if (selectedRange.startDate) {
+            startDate = selectedRange.startDate.toISOString().split('T')[0];
         }
-        fetchData();
-    }, [selectedOption, selectedRange]);
+
+        if (selectedRange.endDate) {
+            endDate = selectedRange.endDate.toISOString().split('T')[0];
+        }
+
+        const response = await fetchPastUserTrade(selectedOption, pageNumber, startDate, endDate);
+        const pastUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
+        setPastUserTradeData(pastUserTradeData);
+    }
+
+    fetchData();
+}, [selectedOption, pageNumber, selectedRange]);
+
+    
     return (
         <>
 
@@ -95,7 +103,7 @@ function PastTable() {
                             variant={selectedOption === option.name ? 'primary' : 'outline-primary'}
                             onClick={() => handleOptionClick(option.name)}
                         >
-                            {option.name}
+                            {option.name.toUpperCase()}
                         </Button>
                     ))}
                 </div>
@@ -147,7 +155,7 @@ function PastTable() {
                 {isLoading ? (
                     <Loader />
                 ) : filteredPastUsers.length === 0 ? (
-                    <div className="no-data-message">No data found.</div>
+                    <div className="no-data-message">No data found, Select Date Range.</div>
                 ) : (
                     <Table striped className='main-table'>
                         <thead className='table-heading-style'>
@@ -161,27 +169,46 @@ function PastTable() {
                         </thead>
                         <tbody>
                             {Array.isArray(filteredPastUsers) && filteredPastUsers.map((item, index) => (
-                                <tr key={index}>
-                                    <td className='td-TradTable'>
-                                        {/* <large className="currency-style">{formatDateTime(item?.createdAt) || ''}</large> */}
-                                    </td>
-                                    <td className='td-TradTable'>
-                                        <large className="large-text">{item?.fullName || ""}</large>
-                                    </td>
-                                    <td className='td-TradTable'>
-                                        <large className="large-text">{item?.userEmail || ""}</large>
-                                    </td>
-                                    <td style={{ color: 'black' }} className='td-TradTable'>
-                                        <small>{item?.totalInvestment}</small>
-                                    </td>
-                                    <td style={{ color: 'black' }} className='td-TradTable'>
-                                        <small>{item?.profitPercentage.toFixed(3)}</small>
-                                    </td>
-                                </tr>
+                                item ? (
+                                    <tr key={index}>
+                                        <td className='td-TradTable'>
+                                            <large className="currency-style">{formatDateTime(item?.created_at) || ''}</large>
+                                        </td>
+                                        <td className='td-TradTable'>
+                                            <large className="large-text">{item?.fullName || ""}</large>
+                                        </td>
+                                        <td className='td-TradTable'>
+                                            <large className="large-text">{item?.email || ""}</large>
+                                        </td>
+                                        <td style={{ color: 'black' }} className='td-TradTable'>
+                                            <small>
+                                                {item.trades.reduce(
+                                                    (totalInvestment, trade) => totalInvestment + trade.total_investment,
+                                                    0
+                                                )}
+                                            </small>
+                                        </td>
+                                        <td style={{ color: 'black' }} className='td-TradTable'>
+                                            <small>{item?.profit.toFixed(3)}</small>
+                                        </td>
+                                    </tr>
+                                ) : null
                             ))}
+
                         </tbody>
                     </Table>
                 )}
+                <div className="pagination-container">
+                    {Array.from({ length: totalPages }).map((_, index) => (
+                        <Button
+                            key={index}
+                            variant={index + 1 === pageNumber ? 'primary' : 'secondary'}
+                            onClick={() => setPageNumber(index + 1)}
+                        >
+                            {index + 1}
+                        </Button>
+                    ))}
+                </div>
             </Card>
         </>
     )
