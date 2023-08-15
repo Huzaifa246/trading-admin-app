@@ -12,8 +12,10 @@ import adminInActiveUser from '../../Services/getInActiveUser';
 import Loader from '../Loader/Loader';
 import deleteUserByAdmin from '../../Services/deleteUserByAdmin';
 import ViewUserDetails from '../../Services/getViewUserDetails';
+import { useParams } from 'react-router-dom'; 
 
 const UserTableComp = () => {
+    const { page } = useParams();
     const [users, setUsers] = useState([]);
     const [viewUsers, setViewUsers] = useState([]);
     const [viewModalShow, setViewModalShow] = useState(false);
@@ -29,9 +31,10 @@ const UserTableComp = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredUsers = users.filter(user =>
-        user.fullName && user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredUsers = users.filter(user =>
+    //     (user.email && user.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    //     (user.fullName && user.fullName.toLowerCase().includes(searchQuery.toLowerCase()))
+    // );
     const handleStatusChange = (status, userId) => {
         setModalShow(true);
         setSelectedStatus(status);
@@ -68,10 +71,11 @@ const UserTableComp = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const decryptedData = await fetchAllUsers(currentPage, searchQuery); // Pass the current page and search query as parameters
-                setUsers(decryptedData.data);
-                console.log(decryptedData, "data")
-                setTotalPages(decryptedData.totalPages);
+                const decryptedData = await fetchAllUsers(currentPage, searchQuery);
+                if (decryptedData.data && Array.isArray(decryptedData.data)) {
+                    setUsers(decryptedData.data);
+                    setTotalPages(decryptedData.totalPages);
+                }
             } catch (error) {
                 console.error('Error fetching and decrypting data:', error);
             }
@@ -115,6 +119,7 @@ const UserTableComp = () => {
     // for (const user of users) {
     //     console.log(user._id, "User id");
     //   }
+    console.log(users,"sad")
 
     return (
         <>
@@ -159,24 +164,24 @@ const UserTableComp = () => {
                 </Modal.Header>
                 <Modal.Body>
                     {selectedUserViewDetails && (
-                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
-                             <p><b>Name:</b></p>
-                             <p>{selectedUserViewDetails.fullName}</p>
-                         </div>
-                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
-                             <p><b>Email:</b></p>
-                             <p>{selectedUserViewDetails.email}</p>
-                         </div>
-                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
-                             <p><b>Total Balance:</b></p>
-                             <p>{selectedUserViewDetails.totalbalance}</p>
-                         </div>
-                         <div style={{ display: 'flex', justifyContent: 'space-between', width:"100%" }}>
-                             <p><b>Withdrawable:</b></p>
-                             <p>{selectedUserViewDetails.withdrawable}</p>
-                         </div>
-                     </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                                <p><b>Name:</b></p>
+                                <p>{selectedUserViewDetails.fullName}</p>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                                <p><b>Email:</b></p>
+                                <p>{selectedUserViewDetails.email}</p>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                                <p><b>Total Balance:</b></p>
+                                <p>{selectedUserViewDetails.totalbalance}</p>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                                <p><b>Withdrawable:</b></p>
+                                <p>{selectedUserViewDetails.withdrawable}</p>
+                            </div>
+                        </div>
                     )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -209,7 +214,7 @@ const UserTableComp = () => {
                 <div className='table-border-style'>
                     {isLoading ? (
                         <Loader /> // Display the loader when isLoading is true
-                    ) : filteredUsers.length === 0 ? (
+                    ) : users?.length > 0 ? (
                         <div className="no-data-message">No data found.</div>
                     ) : (
                         <Table striped className='main-table'>
@@ -224,7 +229,7 @@ const UserTableComp = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredUsers.map((item, index) => (
+                                {users?.map((item, index) => (
                                     <tr key={index}>
                                         <td>
                                             <div className='main-tableicon'>

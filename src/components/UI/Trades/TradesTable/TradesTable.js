@@ -15,8 +15,9 @@ import ReleaseTradeApi from '../../../../Services/ReleaseTradeApi';
 import { addDays } from "date-fns";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
-import { DateRangePicker, DateRange } from "react-date-range";
+import { DateRange } from "react-date-range";
 import { Calendar } from "react-feather";
+import { formatDateTime } from '../../../../Services/DataFormat/DateFormat';
 
 const TradesTable = () => {
     const [showModal, setShowModal] = useState(false);
@@ -43,6 +44,9 @@ const TradesTable = () => {
     const [releaseError, setReleaseError] = useState(null); // State to hold release error
     const [releaseSuccess, setReleaseSuccess] = useState(false);
     const [selectAll, setSelectAll] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1); // Initialize with the starting page
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [selectedRange, setSelectedRange] = useState({
         startDate: null,
@@ -103,9 +107,9 @@ const TradesTable = () => {
     };
     const confirmRelease = async () => {
         try {
-            const userId = dataCurrentUserT[selectedItems]?.userId;
+            const userId = dataCurrentUserT[selectedItems]?._id?.user;
             if (!userId) {
-                console.error('No user data available.');
+                console.error('No user Id data available.');
                 return;
             }
 
@@ -152,29 +156,45 @@ const TradesTable = () => {
         setSelectAll(selectedItems.length === dataCurrentUserT.length);
     };
 
-        //fetching options from api
+    //fetching options from api
     useEffect(() => {
         async function fetchData() {
             const decryptedData = await fetchAllTradeOption();
             setTradeOptions(decryptedData.data);
-            console.log(decryptedData.data)
         }
         fetchData();
     }, []);
     const handleOptionClick = async (optionName) => {
         setSelectedOption(optionName);
+        setPageNumber(pageNumber);
         setIsButtonActive(true);
         setIsLoading(true);
-        const response = await fetchCurrentUserTrade(optionName);        
-        const currentUserTradeData = response?.data?.send?.map(item => item?.user) || [];
-        setDataCurrentUserT(currentUserTradeData);
-        setIsLoading(false);
+        // const response = await fetchCurrentUserTrade(optionName, pageNumber);
+        // const currentUserTradeData = response?.data?.send?.map(item => item?.user) || [];
+        // const currentUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
+        // if (response?.data?.investmentFound) {
+        //     const currentUserTradeData = response.data.investmentFound || '';
+        //     setDataCurrentUserT(currentUserTradeData);
+        // }
+        // else {
+        //     setDataCurrentUserT([]);
+        // }
+        // setIsLoading(false);
+        const response = await fetchCurrentUserTrade(optionName, pageNumber);
+        if (response?.data?.investmentFound) {
+            const currentUserTradeData = response.data.investmentFound || '';
+            setDataCurrentUserT(currentUserTradeData);
+            setIsLoading(false);
+        } else {
+            setDataCurrentUserT([]);
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
         async function fetchData() {
-            let startDate = null;
-            let endDate = null;
+            let startDate = '';
+            let endDate = '';
 
             if (selectedRange.startDate) {
                 startDate = selectedRange.startDate.toISOString().split('T')[0];
@@ -184,19 +204,26 @@ const TradesTable = () => {
                 endDate = selectedRange.endDate.toISOString().split('T')[0];
             }
             setIsLoading(true);
-            const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, startDate, endDate);
-            const userObjectsArray = currentUserTradeData?.data?.send?.map(item => item?.user) || [];
+            const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
+            const userObjectsArray = currentUserTradeData.data || [];
+
             // Calculate total investment and total investors
-            const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
+            // const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
+            // setTotalInvestment(totalInv);
+            // setTotalInvestors(userObjectsArray.length);
+            let totalInv = 0;
+            for (const userId in userObjectsArray) {
+                totalInv += userObjectsArray[userId].totalInvestment || 0;
+            }
             setTotalInvestment(totalInv);
-            setTotalInvestors(userObjectsArray.length);
+            setTotalInvestors(Object.keys(userObjectsArray).length);
 
             // console.log("users", userObjectsArray);
             setDataCurrentUserT(userObjectsArray);
             setIsLoading(false);
         }
         fetchData();
-    }, [selectedOption, selectedRange]);
+    }, [selectedOption, pageNumber, selectedRange, searchQuery]);
 
     const releaseAll = () => {
         openProfitModal();
@@ -210,10 +237,10 @@ const TradesTable = () => {
                 const selectedItem = dataCurrentUserT[selectedIndex];
 
                 // Calculate the new total investment amount with profit percentage
-                const newTotalInvestment = selectedItem.trades.total_investment * (1 + profitForAll / 100);
+                const newTotalInvestment = selectedItem?.data?.investmentFound?.total_investment * (1 + profitForAll / 100);
 
                 // Call the ReleaseTradeApi function with updated total investment amount
-                const releaseResponse = await ReleaseTradeApi(selectedItem.userId, profitForAll, selectedOption, newTotalInvestment);
+                const releaseResponse = await ReleaseTradeApi(selectedItem?.userId, profitForAll, selectedOption, newTotalInvestment);
                 releases.push(releaseResponse);
             }
 
@@ -396,7 +423,13 @@ const TradesTable = () => {
                                 <span className="form-control-feedback">
                                     <FontAwesomeIcon icon={faSearch} style={{ color: "#c9c8c8" }} />
                                 </span>
-                                <input type="text" class="form-control search-form" placeholder="Search" />
+                                <input
+                                    type="text"
+                                    className="form-control search-form"
+                                    placeholder="Search"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
                             </div>
                             <div
                                 className="btn btn-link p-0 date-range-picker-button position-relative d-flex justify-content-end calender-icon-style"
@@ -458,74 +491,90 @@ const TradesTable = () => {
                         {isLoading ? (
                             <Loader />
                         ) : (
-                            <Table striped className='main-table'>
-                                <thead className='table-heading-style'>
-                                    <tr>
-                                        <th style={{ textAlign: "center", display: 'block' }}>
-                                            {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
-                                                <Form.Check
-                                                    type="checkbox"
-                                                    id="checkbox-select-all"
-                                                    checked={selectAll}
-                                                    onChange={toggleSelectAll}
-                                                    key={index}
-                                                />
-                                            ))}
-                                        </th>
-                                        <th className='th-trades-class'>Date</th>
-                                        <th className='th-trades-class'>Name</th>
-                                        <th className='th-trades-class'>Email</th>
-                                        <th className='th-trades-class'>Amount</th>
-                                        <th className='th-trades-action'>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
-                                        <tr key={index}>
-                                            <td style={{ textAlign: "center" }}>
-                                                <Form.Check
-                                                    type="checkbox"
-                                                    id={`checkbox-${index}`}
-                                                    checked={selectedItems.includes(index)}
-                                                    onChange={() => handleCheckboxChange(index)}
-                                                />
-                                            </td>
-                                            <td style={{ color: 'black' }} className='td-TradTable'>
-                                                <small></small>
-                                            </td>
-                                            <td className='td-TradTable'>
-                                                <large className="large-text">{item?.userFullName || ""}</large>
-                                            </td>
-                                            <td style={{ color: 'black' }} className='td-TradTable'>
-                                                <small>{item?.email}</small>
-                                            </td>
-                                            <td className='td-TradTable'>
-                                                <large className="currency-style">{item?.trades?.total_investment || ''}</large>
-                                            </td>
-                                            <td className='action-col td-TradTable'>
-                                                <large className="action-style">
-                                                    {/* <Button
-                                                        variant="danger"
-                                                        onClick={openReleaseModal}
-                                                        disabled={selectAll || !selectedItems.includes(index)}
-                                                    >
-                                                        Release
-                                                    </Button> */}
-                                                    <Button
-                                                        variant="danger"
-                                                        onClick={() => openReleaseModal(index)}
-                                                        disabled={selectAll || !selectedItems.includes(index) || selectedItems.length > 1}
-                                                    >
-                                                        Release
-                                                    </Button>
-                                                    {/* )} */}
-                                                </large>
-                                            </td>
+                            (dataCurrentUserT.length === 0 && (!selectedRange.startDate || !selectedRange.endDate)) ? (
+                                <div className="no-data-message"> "No data found, Select Date Range."</div>
+                            ) : (
+                                <Table striped className='main-table'>
+                                    <thead className='table-heading-style'>
+                                        <tr>
+                                            <th style={{ textAlign: "center", display: 'block' }}>
+                                                {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
+                                                    <Form.Check
+                                                        type="checkbox"
+                                                        id="checkbox-select-all"
+                                                        checked={selectAll}
+                                                        onChange={toggleSelectAll}
+                                                        key={index}
+                                                    />
+                                                ))}
+                                            </th>
+                                            <th className='th-trades-class'>Date</th>
+                                            <th className='th-trades-class'>Name</th>
+                                            <th className='th-trades-class'>Email</th>
+                                            <th className='th-trades-class'>Amount</th>
+                                            <th className='th-trades-action'>Action</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
+                                    </thead>
+                                    <tbody>
+                                        {/* {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
+                                        <tr key={index}> */}
+                                        {/* {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((itemsArray, outerIndex) => (
+                                            Array.isArray(itemsArray.userDetails) && itemsArray.userDetails.map((userDetail, innerIndex) => ( */}
+                                        {/* <tr key={`${outerIndex}-${innerIndex}`}> */}
+                                        {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((userDetail, index) => (
+                                            // Check if name and email properties are present before rendering
+                                            userDetail.name && userDetail.email ? (
+                                                <tr key={index}>
+                                                    <td style={{ textAlign: "center" }}>
+                                                        <Form.Check
+                                                            type="checkbox"
+                                                            id={`checkbox-${index}`}
+                                                            checked={selectedItems.includes(index)}
+                                                            onChange={() => handleCheckboxChange(index)}
+                                                        />
+                                                    </td>
+                                                    <td style={{ color: 'black' }} className='td-TradTable'>
+                                                        <small>{formatDateTime(userDetail?._id?.invesAt) || ''}</small>
+                                                    </td>
+                                                    <td className='td-TradTable'>
+                                                        <large className="large-text">{userDetail?.name || ""}</large>
+                                                    </td>
+                                                    <td style={{ color: 'black' }} className='td-TradTable'>
+                                                        <small>{userDetail?.email}</small>
+                                                    </td>
+                                                    <td className='td-TradTable'>
+                                                        <large className="currency-style">{userDetail?.totalInvestment || ''}</large>
+                                                    </td>
+                                                    <td className='action-col td-TradTable'>
+                                                        <large className="action-style">
+                                                            <Button
+                                                                variant="danger"
+                                                                onClick={() => openReleaseModal(index)}
+                                                                disabled={selectAll || !selectedItems.includes(index) || selectedItems.length > 1}
+                                                            >
+                                                                Release
+                                                            </Button>
+                                                        </large>
+                                                    </td>
+                                                </tr>
+                                            ) : null // Skip rendering if name or email is missing
+                                        ))}
+
+                                    </tbody>
+                                </Table>
+                            )
                         )}
+                    </div>
+                    <div className="pagination-container">
+                        {Array.from({ length: totalPages }).map((_, index) => (
+                            <Button
+                                key={index}
+                                variant={index + 1 === pageNumber ? 'primary' : 'secondary'}
+                                onClick={() => setPageNumber(index + 1)}
+                            >
+                                {index + 1}
+                            </Button>
+                        ))}
                     </div>
                 </Card>
 

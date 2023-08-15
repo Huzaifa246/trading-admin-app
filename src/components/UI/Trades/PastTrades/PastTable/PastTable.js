@@ -27,10 +27,8 @@ function PastTable() {
     const [isButtonActive, setIsButtonActive] = useState(false);
     const [pageNumber, setPageNumber] = useState(1); // Initialize with the starting page
     const [totalPages, setTotalPages] = useState(1);
+    const [apiResponse, setApiResponse] = useState(null); // Add this state variable
 
-    const filteredPastUsers = pastUserTradeData.filter(user =>
-        user?.fullName && user?.fullName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
     const [selectedRange, setSelectedRange] = useState({
         startDate: null,
         endDate: null,
@@ -58,39 +56,49 @@ function PastTable() {
 
     const handleOptionClick = async (optionName) => {
         setSelectedOption(optionName);
-        setPageNumber(1);
+        setPageNumber(pageNumber);
         setIsButtonActive(true);
         setIsLoading(true);
 
-        const response = await fetchPastUserTrade(optionName, 1);
-        const pastUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
-        console.log(pastUserTradeData)
+        const response = await fetchPastUserTrade(optionName, pageNumber);
+        console.log(response, "opt res")
+        if(response?.data?.investmentFound){
+        const pastUserTradeData = response.data.investmentFound || '';
+        // console.log(pastUserTradeData, "option")
         setPastUserTradeData(pastUserTradeData);
+        }
+        else{
+            setPastUserTradeData([]);
+        }
 
         setIsLoading(false);
     };
 
-useEffect(() => {
-    async function fetchData() {
-        let startDate = null;
-        let endDate = null;
-        if (selectedRange.startDate) {
-            startDate = selectedRange.startDate.toISOString().split('T')[0];
+    useEffect(() => {
+        async function fetchData() {
+            let startDate = '';
+            let endDate = '';
+            if (selectedRange.startDate) {
+                startDate = selectedRange.startDate.toISOString().split('T')[0];
+            }
+
+            if (selectedRange.endDate) {
+                endDate = selectedRange.endDate.toISOString().split('T')[0];
+            }
+
+            const response = await fetchPastUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
+            console.log(response, "res")
+            if (response?.data?.investmentFound && Array.isArray(response.data.investmentFound)) {
+                const pastUserTradeData = response.data.investmentFound;
+                setPastUserTradeData(pastUserTradeData);
+                console.log(pastUserTradeData);
+            } else {
+                setPastUserTradeData([]); // Set to an empty array or handle differently
+            }
         }
 
-        if (selectedRange.endDate) {
-            endDate = selectedRange.endDate.toISOString().split('T')[0];
-        }
-
-        const response = await fetchPastUserTrade(selectedOption, pageNumber, startDate, endDate);
-        const pastUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
-        setPastUserTradeData(pastUserTradeData);
-    }
-
-    fetchData();
-}, [selectedOption, pageNumber, selectedRange]);
-
-    
+        fetchData();
+    }, [selectedOption, pageNumber, selectedRange, searchQuery]);
     return (
         <>
 
@@ -154,49 +162,49 @@ useEffect(() => {
                 </div>
                 {isLoading ? (
                     <Loader />
-                ) : filteredPastUsers.length === 0 ? (
-                    <div className="no-data-message">No data found, Select Date Range.</div>
                 ) : (
-                    <Table striped className='main-table'>
-                        <thead className='table-heading-style'>
-                            <tr>
-                                <th className='th-trades-class'>Date</th>
-                                <th className='th-trades-class'>Name</th>
-                                <th className='th-trades-class'>Email</th>
-                                <th className='th-trades-class'>Past Investment</th>
-                                <th className='th-trades-class'>Profit Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Array.isArray(filteredPastUsers) && filteredPastUsers.map((item, index) => (
-                                item ? (
+                    (pastUserTradeData.length > 0 && (!selectedRange.startDate || !selectedRange.endDate)) ? (
+                        <div className="no-data-message">No data found, Select Date Range.</div>
+                    ) : (
+                        <Table striped className='main-table'>
+                            <thead className='table-heading-style'>
+                                <tr>
+                                    <th className='th-trades-class'>Date</th>
+                                    <th className='th-trades-class'>Name</th>
+                                    <th className='th-trades-class'>Email</th>
+                                    <th className='th-trades-class'>Past Investment</th>
+                                    <th className='th-trades-class'>Profit Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* {Array.isArray(filteredPastUsers) && filteredPastUsers.map((item, index) => ( */}
+                                {/* {Array.isArray(pastUserTradeData) && pastUserTradeData.map((itemsArray, outerIndex) => (
+                                    Array.isArray(itemsArray) && itemsArray.map((userDetail, innerIndex) => ( */}
+                                {Array.isArray(pastUserTradeData) && pastUserTradeData.map((userDetail, index) => (
                                     <tr key={index}>
                                         <td className='td-TradTable'>
-                                            <large className="currency-style">{formatDateTime(item?.created_at) || ''}</large>
+                                            <large className="currency-style">{formatDateTime(userDetail?._id?.invesAt) || ''}</large>
                                         </td>
                                         <td className='td-TradTable'>
-                                            <large className="large-text">{item?.fullName || ""}</large>
+                                            <large className="large-text">{userDetail?.fullName || ""}</large>
                                         </td>
                                         <td className='td-TradTable'>
-                                            <large className="large-text">{item?.email || ""}</large>
+                                            <large className="large-text">{userDetail?.email || ""}</large>
                                         </td>
                                         <td style={{ color: 'black' }} className='td-TradTable'>
                                             <small>
-                                                {item.trades.reduce(
-                                                    (totalInvestment, trade) => totalInvestment + trade.total_investment,
-                                                    0
-                                                )}
+                                                {userDetail?.totalInvestment || ""}
                                             </small>
                                         </td>
                                         <td style={{ color: 'black' }} className='td-TradTable'>
-                                            <small>{item?.profit.toFixed(3)}</small>
+                                            <small>{userDetail?.totalProfit.toFixed(3) || ""}</small>
                                         </td>
                                     </tr>
-                                ) : null
-                            ))}
+                                ))}
 
-                        </tbody>
-                    </Table>
+                            </tbody>
+                        </Table>
+                    )
                 )}
                 <div className="pagination-container">
                     {Array.from({ length: totalPages }).map((_, index) => (
