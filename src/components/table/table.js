@@ -12,7 +12,7 @@ import adminInActiveUser from '../../Services/getInActiveUser';
 import Loader from '../Loader/Loader';
 import deleteUserByAdmin from '../../Services/deleteUserByAdmin';
 import ViewUserDetails from '../../Services/getViewUserDetails';
-import { useParams } from 'react-router-dom'; 
+import { useParams } from 'react-router-dom';
 
 const UserTableComp = () => {
     const { page } = useParams();
@@ -31,10 +31,6 @@ const UserTableComp = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    // const filteredUsers = users.filter(user =>
-    //     (user.email && user.email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    //     (user.fullName && user.fullName.toLowerCase().includes(searchQuery.toLowerCase()))
-    // );
     const handleStatusChange = (status, userId) => {
         setModalShow(true);
         setSelectedStatus(status);
@@ -119,7 +115,7 @@ const UserTableComp = () => {
     // for (const user of users) {
     //     console.log(user._id, "User id");
     //   }
-    console.log(users,"sad")
+    console.log(users, "sad")
 
     return (
         <>
@@ -215,8 +211,6 @@ const UserTableComp = () => {
                     {isLoading ? (
                         <Loader /> // Display the loader when isLoading is true
                     ) : users?.length > 0 ? (
-                        <div className="no-data-message">No data found.</div>
-                    ) : (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
                                 <tr>
@@ -297,6 +291,8 @@ const UserTableComp = () => {
                                 </tr>
                             </tfoot>
                         </Table>
+                    ) : (
+                        <div className="no-data-message">No data found.</div>
                     )}
                 </div>
             </Card>

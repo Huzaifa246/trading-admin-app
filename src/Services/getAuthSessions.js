@@ -14,11 +14,11 @@ async function AuthSession() {
       let decryptedData = await decryption(authResponse.data.data);
       console.log(decryptedData, "dcytData of session")
       
-      if (decryptedData) {
-        localStorage.setItem("mySession", JSON.stringify(decryptedData));
-      } else {
-        localStorage.setItem("session", JSON.stringify(decryptedData));
-      }
+      // if (decryptedData) {
+      //   localStorage.setItem("mySession", JSON.stringify(decryptedData));
+      // } else {
+      //   localStorage.setItem("session", JSON.stringify(decryptedData));
+      // }
 
       return true;
     } catch (authError) {
