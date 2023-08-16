@@ -61,13 +61,13 @@ function PastTable() {
         setIsLoading(true);
 
         const response = await fetchPastUserTrade(optionName, pageNumber);
-        console.log(response, "opt res")
-        if(response?.data?.investmentFound){
-        const pastUserTradeData = response.data.investmentFound || '';
-        // console.log(pastUserTradeData, "option")
-        setPastUserTradeData(pastUserTradeData);
+        // console.log(response, "opt res")
+        if (response?.data?.investmentFound) {
+            const pastUserTradeData = response.data.investmentFound || '';
+            // console.log(pastUserTradeData, "option")
+            setPastUserTradeData(pastUserTradeData);
         }
-        else{
+        else {
             setPastUserTradeData([]);
         }
 
@@ -163,7 +163,7 @@ function PastTable() {
                 {isLoading ? (
                     <Loader />
                 ) : (
-                    (pastUserTradeData.length > 0 && (!selectedRange.startDate || !selectedRange.endDate)) ? (
+                    (pastUserTradeData.length === 0) ? (
                         <div className="no-data-message">No data found, Select Date Range.</div>
                     ) : (
                         <Table striped className='main-table'>
@@ -181,25 +181,27 @@ function PastTable() {
                                 {/* {Array.isArray(pastUserTradeData) && pastUserTradeData.map((itemsArray, outerIndex) => (
                                     Array.isArray(itemsArray) && itemsArray.map((userDetail, innerIndex) => ( */}
                                 {Array.isArray(pastUserTradeData) && pastUserTradeData.map((userDetail, index) => (
-                                    <tr key={index}>
-                                        <td className='td-TradTable'>
-                                            <large className="currency-style">{formatDateTime(userDetail?._id?.invesAt) || ''}</large>
-                                        </td>
-                                        <td className='td-TradTable'>
-                                            <large className="large-text">{userDetail?.fullName || ""}</large>
-                                        </td>
-                                        <td className='td-TradTable'>
-                                            <large className="large-text">{userDetail?.email || ""}</large>
-                                        </td>
-                                        <td style={{ color: 'black' }} className='td-TradTable'>
-                                            <small>
-                                                {userDetail?.totalInvestment || ""}
-                                            </small>
-                                        </td>
-                                        <td style={{ color: 'black' }} className='td-TradTable'>
-                                            <small>{userDetail?.totalProfit.toFixed(3) || ""}</small>
-                                        </td>
-                                    </tr>
+                                    userDetail.name && userDetail.email ? (
+                                        <tr key={index}>
+                                            <td className='td-TradTable'>
+                                                <large className="currency-style">{formatDateTime(userDetail?._id?.invesAt) || ''}</large>
+                                            </td>
+                                            <td className='td-TradTable'>
+                                                <large className="large-text">{userDetail?.fullName || ""}</large>
+                                            </td>
+                                            <td className='td-TradTable'>
+                                                <large className="large-text">{userDetail?.email || ""}</large>
+                                            </td>
+                                            <td style={{ color: 'black' }} className='td-TradTable'>
+                                                <small>
+                                                    {userDetail?.totalInvestment || ""}
+                                                </small>
+                                            </td>
+                                            <td style={{ color: 'black' }} className='td-TradTable'>
+                                                <small>{userDetail?.totalProfit.toFixed(3) || ""}</small>
+                                            </td>
+                                        </tr>
+                                    ) : null // Skip rendering if name or email is missing
                                 ))}
 
                             </tbody>

@@ -170,7 +170,6 @@ const TradesTable = () => {
         setIsButtonActive(true);
         setIsLoading(true);
         // const response = await fetchCurrentUserTrade(optionName, pageNumber);
-        // const currentUserTradeData = response?.data?.send?.map(item => item?.user) || [];
         // const currentUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
         // if (response?.data?.investmentFound) {
         //     const currentUserTradeData = response.data.investmentFound || '';
@@ -182,7 +181,7 @@ const TradesTable = () => {
         // setIsLoading(false);
         const response = await fetchCurrentUserTrade(optionName, pageNumber);
         if (response?.data?.investmentFound) {
-            const currentUserTradeData = response.data.investmentFound || '';
+            const currentUserTradeData = response?.data?.investmentFound || '';
             setDataCurrentUserT(currentUserTradeData);
             setIsLoading(false);
         } else {
@@ -205,7 +204,7 @@ const TradesTable = () => {
             }
             setIsLoading(true);
             const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
-            const userObjectsArray = currentUserTradeData.data || [];
+            const userObjectsArray = currentUserTradeData?.data || [];
 
             // Calculate total investment and total investors
             // const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
@@ -252,7 +251,7 @@ const TradesTable = () => {
         }
     };
 
-    console.log(dataCurrentUserT, "user data")
+    // console.log(dataCurrentUserT, "user data")
 
     return (
         <>
@@ -458,14 +457,6 @@ const TradesTable = () => {
                         </div>
                     </div>
                     <div className='Rel-All-style'>
-                        {/* {dataCurrentUserT.length > 0 && selectedItems.length === dataCurrentUserT.length && (
-                            <Button
-                                variant="primary"
-                                onClick={releaseAll}
-                            >
-                                Release All
-                            </Button>
-                        )} */}
                         {dataCurrentUserT.length > 0 && selectedItems.length > 1 && (
                             <Button
                                 variant="primary"
@@ -491,14 +482,14 @@ const TradesTable = () => {
                         {isLoading ? (
                             <Loader />
                         ) : (
-                            (dataCurrentUserT.length === 0 && (!selectedRange.startDate || !selectedRange.endDate)) ? (
+                            (dataCurrentUserT.length === 0) ? (
                                 <div className="no-data-message"> "No data found, Select Date Range."</div>
                             ) : (
                                 <Table striped className='main-table'>
                                     <thead className='table-heading-style'>
                                         <tr>
                                             <th style={{ textAlign: "center", display: 'block' }}>
-                                                {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((item, index) => (
+                                                {Array.isArray(dataCurrentUserT) && dataCurrentUserT?.map((item, index) => (
                                                     <Form.Check
                                                         type="checkbox"
                                                         id="checkbox-select-all"
@@ -521,9 +512,9 @@ const TradesTable = () => {
                                         {/* {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((itemsArray, outerIndex) => (
                                             Array.isArray(itemsArray.userDetails) && itemsArray.userDetails.map((userDetail, innerIndex) => ( */}
                                         {/* <tr key={`${outerIndex}-${innerIndex}`}> */}
-                                        {Array.isArray(dataCurrentUserT) && dataCurrentUserT.map((userDetail, index) => (
+                                        {Array.isArray(dataCurrentUserT) && dataCurrentUserT.length > 0 && dataCurrentUserT?.map((userDetail, index) => (
                                             // Check if name and email properties are present before rendering
-                                            userDetail.name && userDetail.email ? (
+                                            userDetail?.name && userDetail?.email ? (
                                                 <tr key={index}>
                                                     <td style={{ textAlign: "center" }}>
                                                         <Form.Check
