@@ -61,6 +61,7 @@ const TradesTable = () => {
 
     const handleDateChange = (ranges) => {
         setSelectedRange(ranges.selection);
+        setShowCalendar(false);
     };
     useEffect(() => {
         if (releaseSuccess) {
@@ -204,7 +205,7 @@ const TradesTable = () => {
             }
             setIsLoading(true);
             const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
-            const userObjectsArray = currentUserTradeData?.data || [];
+            const userObjectsArray = currentUserTradeData?.data?.investmentFound || [];
 
             // Calculate total investment and total investors
             // const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);

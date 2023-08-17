@@ -36,7 +36,7 @@ const HeaderComponent = () => {
                             <FontAwesomeIcon icon={faUser} className='user-icon' />
                             {isUserDropdownOpen && (
                                 <div className="dropdown-menu show-on-hover">
-                                    <a class="dropdown-item" href="/dashboard">
+                                    <a class="dropdown-item" href="/profile">
                                         <img src={userImg} alt="user" className='list-img-icons' />
                                         Account
                                     </a>

@@ -1,3 +1,22 @@
-.pagination-container{
+.pagination-container {
   text-align: center;
+}
+.main-total-past-style {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  position: relative;
+  transition: 0.25s;
+}
+.total-card-past {
+  background: rgb(227 226 226);
+  box-shadow: none;
+  color: rgb(0 0 0);
+  align-items: center;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  padding: 7px;
+  position: relative;
+  transition: 0.25s;
 }

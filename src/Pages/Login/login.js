@@ -46,9 +46,9 @@ function LoginForm() {
                     "Content-Type": "application/json",
                 },
             }).then(async (res) => {
-                console.log(res, "res")
+                // console.log(res, "res")
                 const decrypted = await decryption(res.data.data)
-                console.log(decrypted)
+                // console.log(decrypted)
                 localStorage.setItem("token", decrypted?.data)
                 const result = await AuthSession();
                 console.log(result, "Authsession")

@@ -21,6 +21,8 @@ function PastTable() {
     const [tradeOptions, setTradeOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState("silver");
     const [pastUserTradeData, setPastUserTradeData] = useState([]);
+    const [totalInvestment, setTotalInvestment] = useState(0);
+    const [totalInvestors, setTotalInvestors] = useState(0);
 
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +44,7 @@ function PastTable() {
 
     const handleDateChange = (ranges) => {
         setSelectedRange(ranges.selection);
+        setShowCalendar(false);
     };
     //fetching options from api
     useEffect(() => {
@@ -87,6 +90,15 @@ function PastTable() {
             }
 
             const response = await fetchPastUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
+            //Calculating investors and investments
+            const userObjectsArray = response?.data?.investmentFound || [];
+            let totalInv = 0;
+            for (const userId in userObjectsArray) {
+                totalInv += userObjectsArray[userId].totalInvestment || 0;
+            }
+            setTotalInvestment(totalInv);
+            setTotalInvestors(Object.keys(userObjectsArray).length);
+            //------------- 
             console.log(response, "res")
             if (response?.data?.investmentFound && Array.isArray(response.data.investmentFound)) {
                 const pastUserTradeData = response.data.investmentFound;
@@ -101,7 +113,6 @@ function PastTable() {
     }, [selectedOption, pageNumber, selectedRange, searchQuery]);
     return (
         <>
-
             <Card className='trade-option-card'>
                 <div className='buttons-container'>
                     {tradeOptions?.map((option, index) => (
@@ -119,6 +130,10 @@ function PastTable() {
             <Card>
                 <div className='table-TT-Past'>
                     <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Past Investment</span>
+                    <div className='main-total-past-style'>
+                        <div className='total-card-past'>Total Investors: {totalInvestors}</div>
+                        <div className='total-card-past'>Total Amount: ${totalInvestment}</div>
+                    </div>
                     <div className='main-bar-calendar'>
                         <div class="form-group has-search">
                             <span className="form-control-feedback">
@@ -153,8 +168,6 @@ function PastTable() {
                                     onChange={handleDateChange}
                                     moveRangeOnFirstSelection={false}
                                     direction="vertical"
-                                // showDateDisplay={false} // Add this prop to hide date display
-                                // showSelectionPreview={false} // Add this prop to hide selection preview
                                 />
                             </div>
                         )}

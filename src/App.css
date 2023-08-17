@@ -6,3 +6,34 @@
 body{
     background-color: #f6f8fc;
 }
+.rdrDateRangeWrapper {
+    height: 200px !important;
+  }
+  .rdrDateDisplay {
+    font-size: 12px; /* Adjust as needed */
+    margin: 0.5em;
+  }
+  .rdrMonth {
+    padding: 0;
+  }
+  
+  .rdrMonth {
+    width: auto;
+  }
+  .rdrMonthAndYearWrapper {
+    padding-top: 0 !important;
+  }
+  .rdrDay {
+    line-height: 2.000em;
+    height: 2.5em;
+  }
+  .main-table-class{
+    width: 100%;
+    padding: 0 30px;
+    margin-top: 6rem;
+  }
+  .user-table-open{
+    width: 85% !important;
+    margin-left: auto;
+    margin-top: 6rem;
+  }

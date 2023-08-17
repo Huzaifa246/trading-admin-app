@@ -1,7 +1,9 @@
 import axios from "axios";
 import { decryption } from "./encryptionDecryption";
+import { useAuthData } from "../store";
 
 async function AuthSession() {
+  const { setAuthData } = useAuthData();
   let token = localStorage.getItem("token");
 
   if (!token) {
@@ -12,6 +14,7 @@ async function AuthSession() {
     try {
       const authResponse = await axios.get(authUrl);
       let decryptedData = await decryption(authResponse.data.data);
+
       console.log(decryptedData, "dcytData of session")
       
       // if (decryptedData) {
