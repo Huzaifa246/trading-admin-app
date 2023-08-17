@@ -4,12 +4,12 @@ import { useAuthData, useSidebar } from '../../../../store';
 
 const AdminProfile = () => {
     const { isSidebarOpen } = useSidebar();
-    // const { authData } = useAuthData();
+    const { authData } = useAuthData();
 
-    // useEffect(() => {
-    //     // You can now use the authData here
-    //     console.log(authData);
-    // }, [authData]);
+    useEffect(() => {
+        // You can now use the authData here
+        console.log(authData);
+    }, [authData]);
     return (
         <>
             <div className={`main-table-class ${isSidebarOpen ? 'user-table-open' : ''}`}>

@@ -38,7 +38,7 @@ function LoginForm() {
         const encrypted = await encryption(credentials)
         console.log(encrypted, "encrypted data")
 
-        axios.post(`https://itsapp-3606ea51973b.herokuapp.com/api/admin/login`, {
+        axios.post(`${process.env.REACT_APP_API}/api/admin/login`, {
             data: encrypted
         },
             {

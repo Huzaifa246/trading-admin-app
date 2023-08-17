@@ -3,7 +3,7 @@ import { decryption } from './encryptionDecryption';
 
 async function fetchAllTradeOption() {
   try {
-    const response = await axios.get('https://itsapp-3606ea51973b.herokuapp.com/api/admin/get-all-trade-options');
+    const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/get-all-trade-options`);
     const encryptedData = response.data.data;
     const decryptedData = await decryption(encryptedData);
     return decryptedData;

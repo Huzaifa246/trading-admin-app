@@ -1,6 +1,6 @@
 import axios from "axios";
 import { decryption } from "./encryptionDecryption";
-// import { useAuthData } from "../store";
+import { useAuthData } from "../store";
 
 async function AuthSession() {
   // const { setAuthData } = useAuthData();
@@ -10,13 +10,13 @@ async function AuthSession() {
     token = localStorage.getItem("myToken");
   }
   if (token) {
-    const authUrl = `https://itsapp-3606ea51973b.herokuapp.com/api/admin/auth/${token}`;
+    const authUrl = `${process.env.REACT_APP_API}/api/admin/auth/${token}`;
     try {
       const authResponse = await axios.get(authUrl);
       let decryptedData = await decryption(authResponse.data.data);
 
       console.log(decryptedData, "dcytData of session")
-      
+      // setAuthData(decryptedData)
       // if (decryptedData) {
       //   localStorage.setItem("mySession", JSON.stringify(decryptedData));
       // } else {

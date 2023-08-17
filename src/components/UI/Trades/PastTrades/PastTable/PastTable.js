@@ -200,7 +200,7 @@ function PastTable() {
                                                 <large className="currency-style">{formatDateTime(userDetail?._id?.invesAt) || ''}</large>
                                             </td>
                                             <td className='td-TradTable'>
-                                                <large className="large-text">{userDetail?.fullName || ""}</large>
+                                                <large className="large-text">{userDetail?.name || ""}</large>
                                             </td>
                                             <td className='td-TradTable'>
                                                 <large className="large-text">{userDetail?.email || ""}</large>

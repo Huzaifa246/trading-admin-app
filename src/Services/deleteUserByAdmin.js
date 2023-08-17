@@ -3,7 +3,7 @@ import { decryption } from './encryptionDecryption';
 
 async function deleteUserByAdmin(_id) {
   try {
-    const response = await axios.delete(`https://itsapp-3606ea51973b.herokuapp.com/api/admin/user-delete/${_id}`);
+    const response = await axios.delete(`${process.env.REACT_APP_API}/api/admin/user-delete/${_id}`);
     const encryptedData = response.data.data;
     const decryptedData = await decryption(encryptedData);
     // console.log(decryptedData,"asd")

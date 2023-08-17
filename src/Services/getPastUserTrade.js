@@ -3,7 +3,7 @@ import { decryption } from "./encryptionDecryption";
 
 async function fetchPastUserTrade(name, pageNumber, search = "", startDate = "", endDate = "") {
   try {
-    let url = `https://itsapp-3606ea51973b.herokuapp.com/api/admin/past-users-in-trade/${name}`;
+    let url = `${process.env.REACT_APP_API}/api/admin/past-users-in-trade/${name}`;
 
     const queryParams = [];
 

@@ -13,7 +13,7 @@ async function ReleaseTradeApi(userId, profitPercentage, selectedOption) {
     console.log(encryptedPostData, "encrypted data")
 
 
-    const response = await axios.post('https://itsapp-3606ea51973b.herokuapp.com/api/admin/profit-released-to-user',
+    const response = await axios.post(`${process.env.REACT_APP_API}/api/admin/profit-released-to-user`,
       { data: encryptedPostData },
       {
         headers: {
