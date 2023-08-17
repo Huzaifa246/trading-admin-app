@@ -1,9 +1,9 @@
 import axios from "axios";
 import { decryption } from "./encryptionDecryption";
-import { useAuthData } from "../store";
+// import { useAuthData } from "../store";
 
 async function AuthSession() {
-  const { setAuthData } = useAuthData();
+  // const { setAuthData } = useAuthData();
   let token = localStorage.getItem("token");
 
   if (!token) {

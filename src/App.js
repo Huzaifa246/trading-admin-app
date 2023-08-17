@@ -8,9 +8,9 @@ function App() {
   return (
     <>
       <SidebarProvider>
-        <AuthDataProvider>
+        {/* <AuthDataProvider> */}
           <LayoutRoute />
-        </AuthDataProvider>
+        {/* </AuthDataProvider> */}
       </SidebarProvider>
     </>
   );
