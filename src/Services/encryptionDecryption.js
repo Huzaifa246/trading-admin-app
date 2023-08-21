@@ -37,29 +37,30 @@ function atob(base64) {
   return Buffer.from(base64, 'base64').toString('binary');
 }
 
-async function encryption(data) {
-  let msg = JSON.stringify(data);
-  const i = generateRandomIv(16);
+const encryption = (obj) => {
+  const msg = JSON.stringify(obj)
+  const i = generateRandomIv(16)
   const key = CryptoJS.enc.Utf8.parse('ED6C504C24FD3140D42E3BFE9F92E4A1');
   const iv = CryptoJS.enc.Utf8.parse(i);
 
-  const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(msg), key, { iv: iv, mode: CryptoJS.mode.CBC });
-  var transitmessage = JSON.stringify({ iv: btoa(i), value: encrypted.toString() });
-  transitmessage = btoa(transitmessage);
-  return transitmessage;
+
+  const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(msg), key, { iv: iv, mode: CryptoJS.mode.CBC })
+  let transitmessage = JSON.stringify({ iv: btoa(i), value: encrypted.toString() });
+  transitmessage = btoa(transitmessage)
+
+  return transitmessage
 }
 
-async function decryption(data) {
+const decryption = (data) => {
   const key = CryptoJS.enc.Utf8.parse('ED6C504C24FD3140D42E3BFE9F92E4A1');
   let res = atob(data);
-  let jsn = JSON.parse(res);
+  let jsn = JSON.parse(res)
   const decrypted = CryptoJS.AES.decrypt(jsn.value, key, {
-    mode: CryptoJS.mode.CBC,
-    iv: CryptoJS.enc.Utf8.parse(atob(jsn.iv)),
+      mode: CryptoJS.mode.CBC,
+      iv: CryptoJS.enc.Utf8.parse(atob(jsn.iv)),
   });
-  const promise1 = await Promise.resolve(JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))).then(value => { return value; });
-
-  return promise1;
+  return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
 }
+
 
 export { encryption, decryption };

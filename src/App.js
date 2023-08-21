@@ -1,15 +1,38 @@
-import LoginForm from './Pages/Login/login';
+import React, { useState, useEffect } from 'react';
 import LayoutRoute from './router/route';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { SidebarProvider, AuthDataProvider } from './store/index';
+import { SidebarProvider, AuthDataContext, AuthDataProvider } from './store/index';
+import axios from "axios";
+import { decryption } from './Services/encryptionDecryption';
 
 function App() {
+  const [authData, setAuthData] = useState({});
+  let token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      axios
+        .get(
+          `${process.env.REACT_APP_API}/api/admin/auth/${token}`
+        )
+        .then((response) => {
+          setAuthData(decryption(response.data.data));
+          return true;
+        })
+        .catch((error) => {
+          localStorage.removeItem("token");
+          return;
+        });
+    }
+  }, [token]);
   return (
     <>
       <SidebarProvider>
         {/* <AuthDataProvider> */}
+        <AuthDataContext.Provider value={{ authData, setAuthData }}>
           <LayoutRoute />
+        </AuthDataContext.Provider>
         {/* </AuthDataProvider> */}
       </SidebarProvider>
     </>

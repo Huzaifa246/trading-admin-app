@@ -45,7 +45,7 @@ import HeaderComponent from '../components/header/header';
 import Investment from './../components/UI/Investment/Investment';
 import User from '../components/UI/users/User';
 import PastTrades from '../components/UI/Trades/PastTrades/PastTrades';
-import Trades from '../components/UI/Trades/Trades'; // Adjust the import path
+import Trades from '../components/UI/Trades/Trades';
 import ProtectedRoutes from '../Services/ProtectedRoutes/ProtectedRoutes';
 import AdminProfile from '../components/UI/Profile/Account/AdminProfile';
 
@@ -53,9 +53,11 @@ function LayoutRoute() {
   return (
     <Routes>
       <Route path="/" element={<LoginForm />} />
+      {/* <Route path="/traders" element={<Trades />} /> */}
       <Route element={<HeaderComponent />}>
         <Route path="/dashboard" element={<ProtectedRoutes element={<Dashboard />} />} />
         <Route path="/users" element={<ProtectedRoutes element={<User />} />} />
+
         <Route path="/traders" element={<ProtectedRoutes element={<Trades />} />} />
         <Route path="/pastTraders" element={<ProtectedRoutes element={<PastTrades />} />} />
         <Route path="/investment" element={<ProtectedRoutes element={<Investment />} />} />

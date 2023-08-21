@@ -1,25 +1,25 @@
 import React, { createContext, useState, useContext } from 'react';
 
 // Create a context for AuthData
-const AuthDataContext = createContext();
+export const AuthDataContext = createContext("");
 
-export const AuthDataProvider = ({ children }) => {
-  const [authData, setAuthData] = useState({});
+// export const AuthDataProvider = ({ children }) => {
+//   const [authData, setAuthData] = useState({});
 
-  return (
-    <AuthDataContext.Provider value={{ authData, setAuthData }}>
-      {children}
-    </AuthDataContext.Provider>
-  );
-};
+//   return (
+//     <AuthDataContext.Provider value={{ authData, setAuthData }}>
+//       {children}
+//     </AuthDataContext.Provider>
+//   );
+// };
 
-export const useAuthData = () => {
-  const context = useContext(AuthDataContext);
-  if (!context) {
-    throw new Error('useAuthData must be used within an AuthDataProvider');
-  }
-  return context;
-};
+// export const useAuthData = () => {
+//   const context = useContext(AuthDataContext);
+//   if (!context) {
+//     throw new Error('useAuthData must be used within an AuthDataProvider');
+//   }
+//   return context;
+// };
 
 //----FOR SIDEBAR
 const SidebarContext = createContext();

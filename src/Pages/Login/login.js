@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Container } from 'react-bootstrap';
 import './login.css';
 import bglogo from '../../assets/images/logo.png';
@@ -9,8 +9,10 @@ import AuthSession from './../../Services/getAuthSessions';
 import Loader from '../../components/Loader/Loader';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthDataContext } from '../../store';
 
 function LoginForm() {
+    const { authData } = useContext(AuthDataContext);
     const navigate = useNavigate()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -23,7 +25,7 @@ function LoginForm() {
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         if (!email || !password) {
@@ -35,7 +37,7 @@ function LoginForm() {
             email: email,
             password: password
         }
-        const encrypted = await encryption(credentials)
+        const encrypted = encryption(credentials)
         console.log(encrypted, "encrypted data")
 
         axios.post(`${process.env.REACT_APP_API}/api/admin/login`, {
@@ -45,26 +47,29 @@ function LoginForm() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-            }).then(async (res) => {
+            }).then(async(res) => {
                 console.log(res, "res")
-                const decrypted = await decryption(res.data.data)
-                console.log(decrypted)
+                let decrypted = decryption(res?.data?.data)
+                console.log(decrypted, "decrypted")
                 localStorage.setItem("token", decrypted?.data)
-                const result = await AuthSession();
-                console.log(result, "Authsession")
-                if (result) {
+                // let token = localStorage.getItem("token");
+                // console.log(token)
+                // const result = await AuthSession(setAuthData);
+                // console.log(result, "Authsession")
+                // if (result) {
                     setShowLoader(false)
                     navigate("/dashboard")
-                }
-                else {
-                    setShowLoader(false)
-                    window.location.reload();
-                    return navigate("/login")
-                }
+                // }
+                // else {
+                //     setShowLoader(false)
+                //     // window.location.reload();
+                //     return navigate("/")
+                // }
             })
-            .catch(async (err) => {
-                const decrypted = await decryption(err.response.data.data)
-                console.log(decrypted.message, "das")
+            .catch((err) => {
+                // console.log(err)
+                const decrypted = decryption(err?.response?.data?.data)
+                console.log(decrypted, "das")
                 if (decrypted?.message.includes("Admin Not Found.")) {
                     setLoginError("Invalid Credentials, Please Check email.")
                 } else if (decrypted?.message.includes("Admin password is wrong.")) {

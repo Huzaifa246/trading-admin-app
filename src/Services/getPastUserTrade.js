@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { decryption } from "./encryptionDecryption";
+import { AdminHeader } from './header';
 
 async function fetchPastUserTrade(name, pageNumber, search = "", startDate = "", endDate = "") {
   try {
@@ -26,7 +27,12 @@ async function fetchPastUserTrade(name, pageNumber, search = "", startDate = "",
 
     console.log(url);
 
-    const response = await axios.get(url);
+    const response = await axios.get(url 
+    ,  {
+      headers: AdminHeader,
+    }
+  );
+
     const encryptedData = response.data.data;
     const decryptedData = await decryption(encryptedData);
 

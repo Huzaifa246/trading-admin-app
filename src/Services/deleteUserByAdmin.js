@@ -1,9 +1,14 @@
 import axios from 'axios';
 import { decryption } from './encryptionDecryption';
+import { AdminHeader } from './header';
 
 async function deleteUserByAdmin(_id) {
   try {
-    const response = await axios.delete(`${process.env.REACT_APP_API}/api/admin/user-delete/${_id}`);
+    const response = await axios.delete(`${process.env.REACT_APP_API}/api/admin/user-delete/${_id}`
+      ,   {
+        headers: AdminHeader,
+      }
+    );
     const encryptedData = response.data.data;
     const decryptedData = await decryption(encryptedData);
     // console.log(decryptedData,"asd")

@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import "./adminProfile.css";
-import { useAuthData, useSidebar } from '../../../../store';
-
+import { AuthDataContext, useSidebar, useAuthData } from '../../../../store';
 const AdminProfile = () => {
     const { isSidebarOpen } = useSidebar();
+    // const { authData, setAuthData } = useAuthData();
     // const { authData } = useAuthData();
+    const { authData } = useContext(AuthDataContext);
 
-    // useEffect(() => {
-    //     // You can now use the authData here
-    //     console.log(authData);
-    // }, [authData]);
+    useEffect(() => {
+        // You can now use the authData here
+        console.log(authData);
+    }, [authData]);
     return (
         <>
             <div className={`main-table-class ${isSidebarOpen ? 'user-table-open' : ''}`}>
@@ -35,7 +36,7 @@ const AdminProfile = () => {
                                                 <div className="row">
                                                     <div className="col-sm-6">
                                                         <p className="m-b-10 f-w-600">Email</p>
-                                                        <h6 className="text-muted f-w-400">TechOnVentures@gmail.com</h6>
+                                                        <h6 className="text-muted f-w-400">{authData?.data?.email || "techon@gmail.com"}</h6>
                                                     </div>
                                                     <div className="col-sm-6">
                                                         <p className="m-b-10 f-w-600">Phone</p>

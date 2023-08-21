@@ -21,13 +21,14 @@ import { formatDateTime } from '../../../../Services/DataFormat/DateFormat';
 
 const TradesTable = () => {
     const [showModal, setShowModal] = useState(false);
-    const [profitPercentage, setProfitPercentage] = useState(0);
+    const [profitPercentage, setProfitPercentage] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [showALLConfirmation, setShowALLConfirmation] = useState(false);
 
     const [tradeOptions, setTradeOptions] = useState([]);
     const [dataCurrentUserT, setDataCurrentUserT] = useState([]);
     const [selectedOption, setSelectedOption] = useState("silver");
+    const [investmentTypeId, setInvestmentTypeId] = useState("");
     const [isButtonActive, setIsButtonActive] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -122,10 +123,10 @@ const TradesTable = () => {
             console.log('Sending request with data:', {
                 userId,
                 profitPercentage,
-                selectedOption
+                investmentTypeId
             });
 
-            const releaseResponse = await ReleaseTradeApi(userId, profitPercentage, selectedOption);
+            const releaseResponse = await ReleaseTradeApi(userId, profitPercentage, investmentTypeId);
             setShowConfirmationModal(false);
             if (releaseResponse.success) {
                 setReleaseSuccess(true); // Set success flag
@@ -162,25 +163,17 @@ const TradesTable = () => {
         async function fetchData() {
             const decryptedData = await fetchAllTradeOption();
             setTradeOptions(decryptedData.data);
+            console.log(decryptedData, "oo")
         }
         fetchData();
     }, []);
-    const handleOptionClick = async (optionName) => {
-        setSelectedOption(optionName);
+    const handleOptionClick = async (option) => {
+        setSelectedOption(option.name);
+        setInvestmentTypeId(option._id);
         setPageNumber(pageNumber);
         setIsButtonActive(true);
         setIsLoading(true);
-        // const response = await fetchCurrentUserTrade(optionName, pageNumber);
-        // const currentUserTradeData = response?.data?.investmentFound?.map(item => item?.userDetails) || [];
-        // if (response?.data?.investmentFound) {
-        //     const currentUserTradeData = response.data.investmentFound || '';
-        //     setDataCurrentUserT(currentUserTradeData);
-        // }
-        // else {
-        //     setDataCurrentUserT([]);
-        // }
-        // setIsLoading(false);
-        const response = await fetchCurrentUserTrade(optionName, pageNumber);
+        const response = await fetchCurrentUserTrade(option.name, pageNumber);
         if (response?.data?.investmentFound) {
             const currentUserTradeData = response?.data?.investmentFound || '';
             setDataCurrentUserT(currentUserTradeData);
@@ -207,10 +200,6 @@ const TradesTable = () => {
             const currentUserTradeData = await fetchCurrentUserTrade(selectedOption, pageNumber, searchQuery, startDate, endDate);
             const userObjectsArray = currentUserTradeData?.data?.investmentFound || [];
 
-            // Calculate total investment and total investors
-            // const totalInv = userObjectsArray.reduce((sum, user) => sum + (user?.trades?.total_investment || 0), 0);
-            // setTotalInvestment(totalInv);
-            // setTotalInvestors(userObjectsArray.length);
             let totalInv = 0;
             for (const userId in userObjectsArray) {
                 totalInv += userObjectsArray[userId].totalInvestment || 0;
@@ -240,7 +229,7 @@ const TradesTable = () => {
                 const newTotalInvestment = selectedItem?.data?.investmentFound?.total_investment * (1 + profitForAll / 100);
 
                 // Call the ReleaseTradeApi function with updated total investment amount
-                const releaseResponse = await ReleaseTradeApi(selectedItem?.userId, profitForAll, selectedOption, newTotalInvestment);
+                const releaseResponse = await ReleaseTradeApi(selectedItem?._id?.user, profitForAll, investmentTypeId, newTotalInvestment);
                 releases.push(releaseResponse);
             }
 
@@ -269,6 +258,13 @@ const TradesTable = () => {
                             type="number"
                             value={profitForAll}
                             onChange={(e) => setProfitForAll(e.target.value)}
+                            type="number"
+                            min={0}
+                            onkeypress={(event) => {
+                                if (event.charcode < 48) {
+                                    event.preventdefault();
+                                }
+                            }}
                         />
                     </Form.Group>
                 </Modal.Body>
@@ -317,6 +313,13 @@ const TradesTable = () => {
                             type="number"
                             value={profitPercentage}
                             onChange={(e) => setProfitPercentage(e.target.value)}
+                            min={0}
+                            step={1}
+                            onkeypress={(event) => {
+                                if (event.charcode < 48) {
+                                    event.preventdefault();
+                                }
+                            }}
                         />
                     </Form.Group>
                 </Modal.Body>
@@ -403,7 +406,7 @@ const TradesTable = () => {
                             key={index}
                             className={`btn-trades-style ${selectedOption === option.name && isButtonActive ? 'active' : ''}`}
                             variant={selectedOption === option.name ? 'primary' : 'outline-primary'}
-                            onClick={() => handleOptionClick(option.name)}
+                            onClick={() => handleOptionClick(option)}
                         >
                             {option.name.toUpperCase()}
                         </Button>

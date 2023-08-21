@@ -20,7 +20,7 @@ async function UpdatePasswordApi(adminId, oldPassword, newPassword) {
                     "Content-Type": "application/json",
                 },
             });
-
+            // , { AdminHeader });
         const encryptedData = response.data.data;
 
         const decryptedData = await decryption(encryptedData);

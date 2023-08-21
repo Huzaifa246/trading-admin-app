@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { decryption, encryption } from './encryptionDecryption';
+import { AdminHeader } from './header';
 
-async function ReleaseTradeApi(userId, profitPercentage, selectedOption) {
+async function ReleaseTradeApi(userId, profitPercentage, selectedOptionId) {
   try {
     const releaseBody = {
       userId: userId,
       profitPercentage: profitPercentage,
-      investmentType: selectedOption
+      investmentTypeId: selectedOptionId
     };
     console.log(releaseBody, "api")
     const encryptedPostData = await encryption(releaseBody);
@@ -16,10 +17,9 @@ async function ReleaseTradeApi(userId, profitPercentage, selectedOption) {
     const response = await axios.post(`${process.env.REACT_APP_API}/api/admin/profit-released-to-user`,
       { data: encryptedPostData },
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+        headers: AdminHeader,
+      }
+    );
 
     const encryptedData = response.data.data;
 
