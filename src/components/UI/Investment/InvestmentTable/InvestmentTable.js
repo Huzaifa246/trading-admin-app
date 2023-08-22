@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card } from 'react-bootstrap';
+import { Table, Card, Button } from 'react-bootstrap';
 import './investTable.css';
 import fetchAllInvestment from '../../../../Services/getAllInvestment';
 import { useSidebar } from '../../../../store';
@@ -7,33 +7,35 @@ import { useSidebar } from '../../../../store';
 const InvestmentTable = () => {
     const { isSidebarOpen } = useSidebar();
     const [usersInvest, setUsersInvest] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetchAllInvestment();
-                setUsersInvest(response?.data?.send);
+                const response = await fetchAllInvestment(currentPage);
+                const currentPageData = response?.data?.investment;
+                setUsersInvest(currentPageData);
+
             } catch (error) {
                 console.error('Error fetching and decrypting data:', error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [currentPage]);
 
-    // Filter out rows with missing fullName or email
-    const filteredUsersInvest = usersInvest.filter(item => item?.user?.fullName && item?.user?.email);
+    const filteredUsersInvest = usersInvest?.filter(item => item?.user?.fullName && item?.user?.email);
 
     return (
         <>
-            <div style={{ marginTop: "6rem" }}>
-            </div>
+            <div style={{ marginTop: "6rem" }}></div>
             <Card>
                 <div className='table-heading'>
                     <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Investment List</span>
                 </div>
                 <div className='table-border-style'>
-                    {usersInvest.length > 0 ? (
+                    {filteredUsersInvest?.length > 0 ? (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
                                 <tr>
@@ -75,13 +77,35 @@ const InvestmentTable = () => {
                     ) : (
                         <>
                             <div className='Main-NotFound'>
-                                <div class="empty-state__message">No records has been added yet.</div>
+                                <div class="empty-state__message">No records have been added yet.</div>
                                 <div class="empty-state__help">
-                                    Add a new record by simpley clicking the button on top right side.
+                                    Add a new record!!!
                                 </div>
                             </div>
                         </>
                     )}
+                </div>
+                <div className="pagination-invest-container">
+                    {currentPage > 1 && (
+                        <Button
+                            variant="secondary"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                        >
+                            Back
+                        </Button>
+                    )}
+                    <Button
+                        variant={currentPage ? "primary" : "secondary"}
+                        onClick={() => setCurrentPage(currentPage)}
+                    >
+                        {currentPage}
+                    </Button>
+                    <Button
+                        variant={currentPage === totalPages + 1 ? "primary" : "secondary"} // Highlight the current page
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                    >
+                        {currentPage + 1}
+                    </Button>
                 </div>
             </Card>
         </>

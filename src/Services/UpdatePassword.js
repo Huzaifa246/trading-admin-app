@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { decryption, encryption } from './encryptionDecryption';
+import { AdminHeader } from './header';
 
 async function UpdatePasswordApi(adminId, oldPassword, newPassword) {
     try {
@@ -15,12 +16,7 @@ async function UpdatePasswordApi(adminId, oldPassword, newPassword) {
 
         const response = await axios.post(`${process.env.REACT_APP_API}/api/admin/update-password`,
             { data: encryptedPostData },
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            // , { AdminHeader });
+            { headers: AdminHeader });
         const encryptedData = response.data.data;
 
         const decryptedData = await decryption(encryptedData);

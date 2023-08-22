@@ -126,5 +126,15 @@ td {
   text-transform: capitalize;
 }
 .search-form {
-  padding-left: 40px; 
+  padding-left: 40px;
+}
+.badge-style {
+  padding: 0.5rem;
+  color: white;
+  text-transform: uppercase;
+  min-width: 65px;
+}
+.disabled-icon {
+  pointer-events: none; /* Disable click events on the icon */
+  opacity: 0.3; /* Reduce opacity to visually indicate it's disabled */
 }

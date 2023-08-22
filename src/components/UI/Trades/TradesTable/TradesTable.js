@@ -28,7 +28,7 @@ const TradesTable = () => {
     const [tradeOptions, setTradeOptions] = useState([]);
     const [dataCurrentUserT, setDataCurrentUserT] = useState([]);
     const [selectedOption, setSelectedOption] = useState("silver");
-    const [investmentTypeId, setInvestmentTypeId] = useState("");
+    const [investmentTypeId, setInvestmentTypeId] = useState("64cbebbd087e64a53520e594");
     const [isButtonActive, setIsButtonActive] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -107,9 +107,13 @@ const TradesTable = () => {
         closeReleaseModal();
         return (profitPercentage);
     };
-    const confirmRelease = async () => {
+    const confirmRelease = async (totalInvestment, invesAt) => {
         try {
             const userId = dataCurrentUserT[selectedItems]?._id?.user;
+            const totalInvestment = dataCurrentUserT[selectedItems]?.totalInvestment;
+            const invesAt = dataCurrentUserT[selectedItems]?._id?.invesAt;
+
+
             if (!userId) {
                 console.error('No user Id data available.');
                 return;
@@ -120,13 +124,16 @@ const TradesTable = () => {
                 console.error('Invalid profit percentage.');
                 return;
             }
+
             console.log('Sending request with data:', {
                 userId,
                 profitPercentage,
-                investmentTypeId
+                investmentTypeId,
+                totalInvestment,
+                invesAt
             });
 
-            const releaseResponse = await ReleaseTradeApi(userId, profitPercentage, investmentTypeId);
+            const releaseResponse = await ReleaseTradeApi(userId, profitPercentage, investmentTypeId, totalInvestment, invesAt);
             setShowConfirmationModal(false);
             if (releaseResponse.success) {
                 setReleaseSuccess(true); // Set success flag
@@ -163,7 +170,7 @@ const TradesTable = () => {
         async function fetchData() {
             const decryptedData = await fetchAllTradeOption();
             setTradeOptions(decryptedData.data);
-            console.log(decryptedData, "oo")
+            console.log(decryptedData, "opt")
         }
         fetchData();
     }, []);
@@ -228,8 +235,12 @@ const TradesTable = () => {
                 // Calculate the new total investment amount with profit percentage
                 const newTotalInvestment = selectedItem?.data?.investmentFound?.total_investment * (1 + profitForAll / 100);
 
+                const totalInvestment = selectedItem?.totalInvestment;
+
+                const date = selectedItem?._id?.invesAt;
+
                 // Call the ReleaseTradeApi function with updated total investment amount
-                const releaseResponse = await ReleaseTradeApi(selectedItem?._id?.user, profitForAll, investmentTypeId, newTotalInvestment);
+                const releaseResponse = await ReleaseTradeApi(selectedItem?._id?.user, profitForAll, investmentTypeId, totalInvestment, date);
                 releases.push(releaseResponse);
             }
 
@@ -258,8 +269,8 @@ const TradesTable = () => {
                             type="number"
                             value={profitForAll}
                             onChange={(e) => setProfitForAll(e.target.value)}
-                            type="number"
                             min={0}
+                            step={1}
                             onkeypress={(event) => {
                                 if (event.charcode < 48) {
                                     event.preventdefault();
@@ -487,7 +498,7 @@ const TradesTable = () => {
                             <Loader />
                         ) : (
                             (dataCurrentUserT.length === 0) ? (
-                                <div className="no-data-message"> "No data found, Select Date Range."</div>
+                                <div className="no-data-message"> "No data found!!!"</div>
                             ) : (
                                 <Table striped className='main-table'>
                                     <thead className='table-heading-style'>
@@ -507,6 +518,7 @@ const TradesTable = () => {
                                             <th className='th-trades-class'>Name</th>
                                             <th className='th-trades-class'>Email</th>
                                             <th className='th-trades-class'>Amount</th>
+                                            <th className='th-trades-class'>Deleted Account</th>
                                             <th className='th-trades-action'>Action</th>
                                         </tr>
                                     </thead>
@@ -539,6 +551,11 @@ const TradesTable = () => {
                                                     </td>
                                                     <td className='td-TradTable'>
                                                         <large className="currency-style">{userDetail?.totalInvestment || ''}</large>
+                                                    </td>
+                                                    <td className='td-TradTable'>
+                                                        <span className={`badge badge-style ${userDetail?.account_deleted ? 'bg-danger' : 'bg-success'}`}>
+                                                            {userDetail?.account_deleted ? 'Deleted' : 'Active'}
+                                                        </span>
                                                     </td>
                                                     <td className='action-col td-TradTable'>
                                                         <large className="action-style">

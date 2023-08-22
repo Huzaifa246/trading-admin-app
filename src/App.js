@@ -17,8 +17,14 @@ function App() {
           `${process.env.REACT_APP_API}/api/admin/auth/${token}`
         )
         .then((response) => {
-          setAuthData(decryption(response.data.data));
-          return true;
+          if (token) {
+            setAuthData(decryption(response.data.data));
+            return true;
+          }
+          else{
+            localStorage.removeItem("token");
+            return;
+          }
         })
         .catch((error) => {
           localStorage.removeItem("token");

@@ -2,9 +2,9 @@ import axios from 'axios';
 import { decryption } from './encryptionDecryption';
 import { AdminHeader } from './header';
 
-async function fetchAllInvestment() {
+async function fetchAllInvestment(currentPage) {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/all-investmnet`
+    const response = await axios.get(`${process.env.REACT_APP_API}/api/admin/all-investmnet/${currentPage}`
     ,   {
       headers: AdminHeader,
     }

@@ -177,7 +177,7 @@ function PastTable() {
                     <Loader />
                 ) : (
                     (pastUserTradeData.length === 0) ? (
-                        <div className="no-data-message">No data found, Select Date Range.</div>
+                        <div className="no-data-message">No data found!!!</div>
                     ) : (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
@@ -186,6 +186,7 @@ function PastTable() {
                                     <th className='th-trades-class'>Name</th>
                                     <th className='th-trades-class'>Email</th>
                                     <th className='th-trades-class'>Past Investment</th>
+                                    <th className='th-trades-class'>Deleted Account</th>
                                     <th className='th-trades-class'>Profit Percentage</th>
                                 </tr>
                             </thead>
@@ -209,6 +210,11 @@ function PastTable() {
                                                 <small>
                                                     {userDetail?.totalInvestment || ""}
                                                 </small>
+                                            </td>
+                                            <td>
+                                                <span className={`badge badge-style ${userDetail?.account_deleted ? 'bg-danger' : 'bg-success'}`}>
+                                                    {userDetail?.account_deleted ? 'Deleted' : 'Active'}
+                                                </span>
                                             </td>
                                             <td style={{ color: 'black' }} className='td-TradTable'>
                                                 <small>{userDetail?.totalProfit.toFixed(3) || ""}</small>

@@ -4,7 +4,6 @@ import { AdminHeader } from './header';
 
 async function fetchAllUsers(page, search = '') {
   try {
-    console.log(AdminHeader, "ASS")
     const response = await axios.get(
       `${process.env.REACT_APP_API}/api/admin/get-allusers/${page}/${search}`,
       {

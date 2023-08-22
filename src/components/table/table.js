@@ -17,7 +17,6 @@ import { useParams } from 'react-router-dom';
 const UserTableComp = () => {
     const { page } = useParams();
     const [users, setUsers] = useState([]);
-    const [viewUsers, setViewUsers] = useState([]);
     const [viewModalShow, setViewModalShow] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [delModalShow, setDelModalShow] = useState(false);
@@ -28,6 +27,8 @@ const UserTableComp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedUserViewDetails, setSelectedUserViewDetails] = useState(null);
     const [selectedUserIdToDelete, setSelectedUserIdToDelete] = useState(null);
+
+    const [error, setError] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -71,9 +72,15 @@ const UserTableComp = () => {
                 if (decryptedData.data && Array.isArray(decryptedData.data)) {
                     setUsers(decryptedData.data);
                     setTotalPages(decryptedData.totalPages);
+
+                    setError(false); // Reset error state since data was successfully fetched.
+                }
+                else if (decryptedData.data.length === 0 && searchQuery.trim() !== '') {
+                    setError(true);
                 }
             } catch (error) {
                 console.error('Error fetching and decrypting data:', error);
+                setError(true);
             }
         };
 
@@ -209,7 +216,11 @@ const UserTableComp = () => {
                 </div>
                 <div className='table-border-style'>
                     {isLoading ? (
-                        <Loader /> // Display the loader when isLoading is true
+                        <Loader />
+                    ) : error ? ( // Display an error message when no results are found.
+                        <div className="no-data-message">No results found for "{searchQuery}".</div>
+                    ) : users?.length === 0 ? (
+                        <div className="no-data-message">No data found, Select Date Range.</div>
                     ) : users?.length > 0 ? (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
@@ -218,61 +229,74 @@ const UserTableComp = () => {
                                     <th>Email</th>
                                     <th>TotalBalance</th>
                                     <th>Referral</th>
+                                    <th>Deleted</th>
                                     <th>Status</th>
                                     <th className='action-heading'>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {users?.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>
-                                            <div className='main-tableicon'>
-                                                <Image src={item?.profile_image?.url || defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style' />
-                                                <large className="large-text">{item?.fullName}</large>
-                                            </div>
-                                        </td>
-                                        <td style={{ color: 'black' }}>
-                                            <small>{item?.email}</small>
-                                        </td>
-                                        <td>
-                                            {/* You need to get the correct data property for the 'transaction' */}
-                                            <large className="large-text">{item?.totalbalance.toFixed(2)}</large>
-                                        </td>
-                                        <td className='third-col'>
-                                            <large className="currency-style">{item?.totalreferral}</large>
-                                        </td>
-                                        <td className='active-user-style'>
-                                            <DropdownButton title={(item.status)}
-                                                className="dropdown-button"
-                                                variant={item.status === "active" ? "success" : "danger"}>
-                                                <Dropdown.Item eventKey="1"
-                                                    onClick={() => handleStatusChange(item.status, item._id)}
-                                                    className="dropdown-item"
+                                    item?.email && item?.fullName ? (
+                                        <tr key={index}>
+                                            <td>
+                                                <div className='main-tableicon'>
+                                                    <Image src={item?.profile_image?.url || defaultImageUrl} width="30" height="30" alt="Profile" roundedCircle className='imagetable-style' />
+                                                    <large className="large-text">{item?.fullName}</large>
+                                                </div>
+                                            </td>
+                                            <td style={{ color: 'black' }}>
+                                                <small>{item?.email}</small>
+                                            </td>
+                                            <td>
+                                                {/* You need to get the correct data property for the 'transaction' */}
+                                                <large className="large-text">{item?.totalbalance.toFixed(2)}</large>
+                                            </td>
+                                            <td className='third-col'>
+                                                <large className="currency-style">{item?.totalreferral}</large>
+                                            </td>
+                                            <td>
+                                                <span className={`badge badge-style ${item?.deleted ? 'bg-danger' : 'bg-success'}`}>
+                                                    {item?.deleted ? 'Deleted' : 'Active'}
+                                                </span>
+                                            </td>
+                                            <td className='active-user-style'>
+                                                <DropdownButton title={(item.status)}
+                                                    className="dropdown-button"
+                                                    variant={item.status === "active" ? "success" : "danger"}
+                                                    disabled={item?.deleted === true}
                                                 >
-                                                    {getStatusLabel(item.status)}
-                                                </Dropdown.Item>
-                                            </DropdownButton>
-                                        </td>
-                                        <td className='action-col-user'>
-                                            <large className="action-style">
-                                                <FontAwesomeIcon icon={faEdit} className="edit-icon" />
-                                                <FontAwesomeIcon
-                                                    icon={faTrashAlt}
-                                                    className="delete-icon"
-                                                    onClick={() => {
-                                                        setDelModalShow(true);
-                                                        setSelectedUserIdToDelete(item._id); // Set the selectedUserIdToDelete
-                                                    }}
-                                                />
-                                                <FontAwesomeIcon
-                                                    icon={faEye}
-                                                    className="view-icon"
-                                                    onClick={() => handleViewUser(item._id)}
-                                                />
+                                                    <Dropdown.Item eventKey="1"
+                                                        onClick={() => handleStatusChange(item.status, item._id)}
+                                                        className="dropdown-item"
+                                                    >
+                                                        {getStatusLabel(item.status)}
+                                                    </Dropdown.Item>
+                                                </DropdownButton>
+                                            </td>
+                                            <td className='action-col-user'>
+                                                <large className="action-style">
+                                                    {/* <FontAwesomeIcon icon={faEdit} className="edit-icon" /> */}
+                                                    <FontAwesomeIcon
+                                                        icon={faTrashAlt}
+                                                        className={`delete-icon ${item.deleted ? 'disabled-icon' : ''}`}
+                                                        disabled={item?.deleted === true}
+                                                        onClick={() => {
+                                                            if (!item.deleted) {
+                                                                setDelModalShow(true);
+                                                                setSelectedUserIdToDelete(item._id); // Set the selectedUserIdToDelete
+                                                            } // Set the selectedUserIdToDelete
+                                                        }}
+                                                    />
+                                                    <FontAwesomeIcon
+                                                        icon={faEye}
+                                                        className="view-icon"
+                                                        onClick={() => handleViewUser(item._id)}
+                                                    />
 
-                                            </large>
-                                        </td>
-                                    </tr>
+                                                </large>
+                                            </td>
+                                        </tr>
+                                    ) : null
                                 ))}
                             </tbody>
                             <tfoot>
