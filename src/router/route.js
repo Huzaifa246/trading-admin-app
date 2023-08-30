@@ -48,6 +48,7 @@ import PastTrades from '../components/UI/Trades/PastTrades/PastTrades';
 import Trades from '../components/UI/Trades/Trades';
 import ProtectedRoutes from '../Services/ProtectedRoutes/ProtectedRoutes';
 import AdminProfile from '../components/UI/Profile/Account/AdminProfile';
+import WithDrawMain from '../components/UI/WithDraw/WithDrawMain';
 
 function LayoutRoute() {
   return (
@@ -61,6 +62,7 @@ function LayoutRoute() {
         <Route path="/traders" element={<ProtectedRoutes element={<Trades />} />} />
         <Route path="/pastTraders" element={<ProtectedRoutes element={<PastTrades />} />} />
         <Route path="/investment" element={<ProtectedRoutes element={<Investment />} />} />
+        <Route path="/withdraw" element={<ProtectedRoutes element={<WithDrawMain />} />} />
         <Route path="/profile" element={<ProtectedRoutes element={<AdminProfile />} />} />
         
       </Route>

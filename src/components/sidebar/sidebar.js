@@ -70,6 +70,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                                 Investment
                             </span>
                         </Nav.Link>
+                        <Nav.Link href="/withdraw" className={`mb-2 main-sidebar ${window.location.pathname === '/withdraw' ? 'active-link' : ''}`}>
+                            <FontAwesomeIcon icon={faMoneyBill} className="me-2 sidebar-icon" />
+                            <span className='sidebar-text'>
+                                WithDraw
+                            </span>
+                        </Nav.Link>
                     </ul>
                 </div>
             </nav>

@@ -1,0 +1,9 @@
+.margin-tb-30{
+    margin: 10px 0;
+}
+.wd-badge-style{
+    padding: 5px;
+    color: white;
+    text-transform: uppercase;
+    min-width: 70px;
+}
