@@ -12,7 +12,9 @@ const AdminProfile = () => {
     const { authData } = useContext(AuthDataContext);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
+    const [showErrorModal, setShowErrorModal] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
@@ -22,28 +24,40 @@ const AdminProfile = () => {
             // Check if the old password and new password are the same
             if (!newPassword) {
                 setModalMessage('New password cannot be empty');
-                setShowModal(true);
+                setShowErrorModal(true);
                 return;
             }
             if (oldPassword === newPassword) {
                 setModalMessage('Old and new passwords cannot be the same');
-                setShowModal(true);
+                setShowErrorModal(true);
                 return;
             }
-            else if (oldPassword !== authData?.data?.password || oldPassword === "") {
+            if (newPassword !== confirmPassword) {
+                setModalMessage('New password and confirm password must match');
+                setShowErrorModal(true);
+                return;
+            }
+            else if (oldPassword === "") {
                 setModalMessage('Old password incorrect or empty. Check Please!!');
-                setShowModal(true);
+                setShowErrorModal(true);
                 return;
             }
 
             const response = await UpdatePasswordApi(adminId, oldPassword, newPassword);
 
-            if (response?.data?.success) {
-                setModalMessage(response.message);
+            // if (response?.data?.success) {
+            //     setModalMessage(response.message);
+            //     setShowModal(true);
+            // } else {
+            //     setModalMessage('Password update failed');
+            //     setShowModal(true);
+            // }
+            if (response?.success) {
+                setModalMessage(response?.data?.message || 'Password Updated.');
                 setShowModal(true);
-            } else {
-                setModalMessage('Password update failed');
-                setShowModal(true);
+            } else if (response?.message === 'Old password is wrong.') {
+                setModalMessage(response?.data?.message || 'Old password is wrong.');
+                setShowErrorModal(true);
             }
         } catch (error) {
             console.error(error);
@@ -53,6 +67,9 @@ const AdminProfile = () => {
         setShowModal(false);
         window.location.reload();
     };
+    const handleErrorCloseModal = () => {
+        setShowErrorModal(false);
+    };
 
     useEffect(() => {
         console.log(authData);
@@ -60,7 +77,19 @@ const AdminProfile = () => {
 
     return (
         <>
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal show={showErrorModal} onHide={handleErrorCloseModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Password Update Failed</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalMessage}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleErrorCloseModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            {/* // */}
+            <Modal show={showModal} onHide={handleCloseModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Password Update</Modal.Title>
                 </Modal.Header>
@@ -122,6 +151,15 @@ const AdminProfile = () => {
                                                                     className="form-control"
                                                                     value={newPassword}
                                                                     onChange={(e) => setNewPassword(e.target.value)}
+                                                                />
+                                                            </div>
+                                                            <div className="col-sm-6">
+                                                                <p className="m-b-10 f-w-600">Confirm Password</p>
+                                                                <input
+                                                                    type="password"
+                                                                    className="form-control"
+                                                                    value={confirmPassword}
+                                                                    onChange={(e) => setConfirmPassword(e.target.value)} // Step 2
                                                                 />
                                                             </div>
                                                         </div>

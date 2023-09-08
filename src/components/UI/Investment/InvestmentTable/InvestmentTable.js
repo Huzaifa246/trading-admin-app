@@ -62,13 +62,13 @@ const InvestmentTable = () => {
                                             <large className="large-text-IT">{item?.investment_name?.name}</large>
                                         </td>
                                         <td className='third-col'>
-                                            <large className="currency-style">{item?.profitPercentage.toFixed(2)}%</large>
+                                            <large className="invest-cur-style">{item?.profitPercentage.toFixed(2)}%</large>
                                         </td>
                                         <td>
-                                            <large className="currency-style">{item?.payment}</large>
+                                            <large className="invest-cur-style">{item?.payment}</large>
                                         </td>
                                         <td className='action-col'>
-                                            <large className="currency-style">{item?.status}</large>
+                                            <large className="invest-cur-style status-invest">{item?.status}</large>
                                         </td>
                                     </tr>
                                 ))}
@@ -101,11 +101,16 @@ const InvestmentTable = () => {
                         {currentPage}
                     </Button>
                     <Button
-                        variant={currentPage === totalPages + 1 ? "primary" : "secondary"} // Highlight the current page
-                        onClick={() => setCurrentPage(currentPage + 1)}
+                        variant={currentPage === totalPages + 1 ? "primary" : "secondary"}
+                        onClick={() => {
+                            if (filteredUsersInvest?.length) {
+                                setCurrentPage(currentPage + 1);
+                            }
+                        }}
                     >
                         {currentPage + 1}
                     </Button>
+
                 </div>
             </Card>
         </>

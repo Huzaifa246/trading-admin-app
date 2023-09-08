@@ -59,7 +59,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                             <Nav.Link href="/traders" className={`submenu-item ${window.location.pathname === '/traders' ? 'active-link' : ''}`}>
                                 Current Data
                             </Nav.Link>
-                            <Nav.Link href="/pastTraders" className={`submenu-item ${window.location.pathname === '/pastdata' ? 'active-link' : ''}`}>
+                            <Nav.Link href="/pastTraders" className={`submenu-item ${window.location.pathname === '/pastTraders' ? 'active-link' : ''}`}>
                                 Past Data
                             </Nav.Link>
                         </Nav>

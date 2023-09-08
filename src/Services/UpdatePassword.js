@@ -24,7 +24,7 @@ async function UpdatePasswordApi(adminId, oldPassword, newPassword) {
         return decryptedData;
     } catch (error) {
         console.error('Error fetching data From Update Pass API:', error);
-        return [];
+        return { success: false, message: 'Old password is wrong.' };
     }
 }
 

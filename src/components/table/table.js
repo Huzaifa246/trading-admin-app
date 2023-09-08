@@ -221,7 +221,7 @@ const UserTableComp = () => {
                         <div className="no-data-message">No results found for "{searchQuery}".</div>
                     ) : users?.length === 0 ? (
                         <div className="no-data-message">No data found, Select Date Range.</div>
-                    ) : users?.length > 0 ? (
+                    ) : users?.length > 0 && (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
                                 <tr>
@@ -296,27 +296,43 @@ const UserTableComp = () => {
                                                 </large>
                                             </td>
                                         </tr>
+                                    ) : users?.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="7" className="text-center">
+                                                No data found, Select Date Range.
+                                            </td>
+                                        </tr>
                                     ) : null
                                 ))}
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colSpan="6" className="text-center">
-                                        {Array.from({ length: totalPages }).map((_, index) => (
-                                            <Button
-                                                key={index}
-                                                variant={index + 1 === currentPage ? 'primary' : 'secondary'}
-                                                onClick={() => handlePageChange(index + 1)}
-                                            >
-                                                {index + 1}
-                                            </Button>
-                                        ))}
-                                    </td>
-                                </tr>
-                            </tfoot>
                         </Table>
-                    ) : (
-                        <div className="no-data-message">No data found.</div>
+                    )}
+                </div>
+                <div className="pagination-invest-container">
+                    {currentPage > 1 && (
+                        <Button
+                            variant="secondary"
+                            onClick={() => setCurrentPage(currentPage - 1)}
+                        >
+                            Back
+                        </Button>
+                    )}
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <Button
+                            key={index}
+                            variant={currentPage === index + 1 ? "primary" : "secondary"}
+                            onClick={() => setCurrentPage(index + 1)}
+                        >
+                            {index + 1}
+                        </Button>
+                    ))}
+                    {currentPage < totalPages && (
+                        <Button
+                            variant="primary"
+                            onClick={() => setCurrentPage(currentPage + 1)}
+                        >
+                            Next
+                        </Button>
                     )}
                 </div>
             </Card>

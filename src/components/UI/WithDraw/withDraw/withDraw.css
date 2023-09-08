@@ -1,9 +1,13 @@
-.margin-tb-30{
-    margin: 10px 0;
+.margin-tb-30 {
+  margin: 10px 0;
 }
-.wd-badge-style{
-    padding: 5px;
-    color: white;
-    text-transform: uppercase;
-    min-width: 70px;
+.wd-badge-style {
+  padding: 5px;
+  color: white;
+  text-transform: uppercase;
+  min-width: 70px;
+}
+.btn-invest-style {
+  min-width: 150px;
+  margin: 0 10px;
 }

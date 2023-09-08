@@ -430,7 +430,7 @@ const TradesTable = () => {
                         <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Traders List</span>
                         <div className='main-total-style'>
                             <div className='total-card'>Total Investors: {totalInvestors}</div>
-                            <div className='total-card'>Total Amount: ${totalInvestment}</div>
+                            <div className='total-card'>Total Amount: ${totalInvestment?.toFixed(2)}</div>
                         </div>
                         <div className='main-bar-calendar'>
                             <div class="form-group has-search">
@@ -554,7 +554,7 @@ const TradesTable = () => {
                                                     </td>
                                                     <td className='td-TradTable'>
                                                         <span className={`badge badge-style ${userDetail?.account_deleted ? 'bg-danger' : 'bg-success'}`}>
-                                                            {userDetail?.account_deleted ? 'Deleted' : 'Active'}
+                                                            {userDetail?.account_deleted ? 'True' : 'False'}
                                                         </span>
                                                     </td>
                                                     <td className='action-col td-TradTable'>

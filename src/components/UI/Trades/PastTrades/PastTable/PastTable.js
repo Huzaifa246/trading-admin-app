@@ -132,7 +132,7 @@ function PastTable() {
                     <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Past Investment</span>
                     <div className='main-total-past-style'>
                         <div className='total-card-past'>Total Investors: {totalInvestors}</div>
-                        <div className='total-card-past'>Total Amount: ${totalInvestment}</div>
+                        <div className='total-card-past'>Total Amount: ${totalInvestment.toFixed(2)}</div>
                     </div>
                     <div className='main-bar-calendar'>
                         <div class="form-group has-search">
@@ -213,7 +213,7 @@ function PastTable() {
                                             </td>
                                             <td>
                                                 <span className={`badge badge-style ${userDetail?.account_deleted ? 'bg-danger' : 'bg-success'}`}>
-                                                    {userDetail?.account_deleted ? 'Deleted' : 'Active'}
+                                                    {userDetail?.account_deleted ? 'True' : 'False'}
                                                 </span>
                                             </td>
                                             <td style={{ color: 'black' }} className='td-TradTable'>

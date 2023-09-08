@@ -108,9 +108,27 @@ td {
   color: #a2a5b9;
   font-size: 0.875rem;
 }
-.Main-NotFound{
+.Main-NotFound {
   text-align: center;
 }
 .pagination-invest-container {
   text-align: center;
+}
+.status-invest {
+  padding: 5px;
+  color: white;
+  text-transform: uppercase;
+  min-width: 70px;
+  background-color: #dc3545;
+  border-radius: 5px;
+  
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }

@@ -87,7 +87,7 @@ td {
 }
 .btn-trades-style {
   margin: 0 10px;
-  min-width: 65px;
+  min-width: 85px;
 }
 .btn-trades-style:active{
   -webkit-box-shadow: 0px 0px 5px 1px rgba(0,123,255,0.75);

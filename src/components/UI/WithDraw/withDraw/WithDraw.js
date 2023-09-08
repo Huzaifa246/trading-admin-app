@@ -79,18 +79,18 @@ function WithDraw() {
             <Card className='margin-tb-30'>
                 <div className='buttons-container'>
                     <Button
-                        className={`btn-trades-style ${status === 'pending' ? 'active' : ''}`}
+                        className={`btn-invest-style ${status === 'pending' ? 'active' : ''}`}
                         variant={status === 'pending' ? 'primary' : 'outline-primary'}
                         onClick={() => handleStatusChange('pending')}
                     >
-                        WithDrawal
+                        Withdrawal
                     </Button>
                     <Button
-                        className={`btn-trades-style ${status === 'approved' ? 'active' : ''}`}
+                        className={`btn-invest-style ${status === 'approved' ? 'active' : ''}`}
                         variant={status === 'approved' ? 'primary' : 'outline-primary'}
                         onClick={() => handleStatusChange('approved')}
                     >
-                        WithDrawal Release
+                        Withdrawal Release
                     </Button>
                 </div>
             </Card>
