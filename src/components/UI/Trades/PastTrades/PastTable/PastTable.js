@@ -49,8 +49,10 @@ function PastTable() {
     //fetching options from api
     useEffect(() => {
         async function fetchData() {
+            setIsLoading(true);
             const decryptedData = await fetchAllTradeOption();
             setTradeOptions(decryptedData.data);
+            setIsLoading(false);
             // console.log(decryptedData.data)
         }
         fetchData();

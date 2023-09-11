@@ -4,6 +4,7 @@ import { Card, Table, Button, Dropdown, Modal } from 'react-bootstrap';
 import "./withDraw.css";
 import { formatDateTime } from '../../../../Services/DataFormat/DateFormat';
 import getWithDrawRelease from './../../../../Services/getWdrawRelease';
+import Loader from './../../../Loader/Loader';
 
 function WithDraw() {
     const [usersWithDraw, setUsersWithDraw] = useState([]);
@@ -12,6 +13,7 @@ function WithDraw() {
     const [status, setStatus] = useState('pending');
     const [showModal, setShowModal] = useState(false); // State to manage modal visibility
     const [successMessage, setSuccessMessage] = useState('');
+    const [isLoader, setIsLoader] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -19,10 +21,12 @@ function WithDraw() {
 
     const fetchData = async () => {
         try {
+            setIsLoader(true)
             const response = await getAllWithDraw(currentPage, status);
             const currentPageData = response.data;
             setUsersWithDraw(currentPageData);
             setTotalPages(response.totalPages);
+            setIsLoader(false)
 
         } catch (error) {
             console.error('Error fetching and decrypting data:', error);
@@ -99,7 +103,9 @@ function WithDraw() {
                     <span style={{ textAlign: 'left', marginBottom: '0' }} className='market-heading'>Withdraw Data</span>
                 </div>
                 <div className='table-border-style'>
-                    {usersWithDraw?.length > 0 ? (
+                    {isLoader ? ( // Render loader while fetching data
+                        <Loader />
+                    ) : usersWithDraw?.length > 0 ? (
                         <Table striped className='main-table'>
                             <thead className='table-heading-style'>
                                 <tr>

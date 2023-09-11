@@ -13,6 +13,7 @@ import Loader from '../Loader/Loader';
 import deleteUserByAdmin from '../../Services/deleteUserByAdmin';
 import ViewUserDetails from '../../Services/getViewUserDetails';
 import { useParams } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UserTableComp = () => {
     const { page } = useParams();
@@ -68,6 +69,7 @@ const UserTableComp = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 const decryptedData = await fetchAllUsers(currentPage, searchQuery);
                 if (decryptedData.data && Array.isArray(decryptedData.data)) {
                     setUsers(decryptedData.data);
@@ -81,6 +83,9 @@ const UserTableComp = () => {
             } catch (error) {
                 console.error('Error fetching and decrypting data:', error);
                 setError(true);
+            }
+            finally {
+                setIsLoading(false);
             }
         };
 
@@ -106,16 +111,14 @@ const UserTableComp = () => {
     };
     const handleViewUser = async (userId) => {
         try {
-            setIsLoading(true);
             const userDetailsResponse = await ViewUserDetails(userId);
+            setViewModalShow(true);
             const userDetails = userDetailsResponse.data;
             console.log(userDetails)
             setSelectedUserViewDetails(userDetails);
-            setViewModalShow(true);
-            setIsLoading(false);
         } catch (error) {
             console.error('Error Viewing user:', error);
-            setIsLoading(false);
+            setViewModalShow(false)
         }
     };
     //  const usersArr = users.data;
@@ -229,7 +232,7 @@ const UserTableComp = () => {
                                     <th>Email</th>
                                     <th>TotalBalance</th>
                                     <th>Referral</th>
-                                    <th>Deleted</th>
+                                    {/* <th>Deleted</th> */}
                                     <th>Status</th>
                                     <th className='action-heading'>Action</th>
                                 </tr>
@@ -254,17 +257,22 @@ const UserTableComp = () => {
                                             <td className='third-col'>
                                                 <large className="currency-style">{item?.totalreferral}</large>
                                             </td>
-                                            <td>
+                                            {/* <td>
                                                 <span className={`badge badge-style ${item?.deleted ? 'bg-danger' : 'bg-success'}`}>
                                                     {item?.deleted ? 'Deleted' : 'Active'}
                                                 </span>
-                                            </td>
+                                            </td> */}
                                             <td className='active-user-style'>
-                                                <DropdownButton title={(item.status)}
+                                                <DropdownButton
+                                                    title={item.deleted === true ? "deleted" : item.status}
                                                     className="dropdown-button"
-                                                    variant={item.status === "active" ? "success" : "danger"}
+                                                    style={{
+                                                        backgroundColor: item.deleted === true ? "red" : "",
+                                                    }}
+                                                    variant={item.deleted === true ? "danger" : (item.status === "active" ? "success" : "danger")}
                                                     disabled={item?.deleted === true}
                                                 >
+
                                                     <Dropdown.Item eventKey="1"
                                                         onClick={() => handleStatusChange(item.status, item._id)}
                                                         className="dropdown-item"
@@ -290,7 +298,9 @@ const UserTableComp = () => {
                                                     <FontAwesomeIcon
                                                         icon={faEye}
                                                         className="view-icon"
-                                                        onClick={() => handleViewUser(item._id)}
+                                                        onClick={() =>{
+                                                            setViewModalShow(true);
+                                                            handleViewUser(item._id)}}
                                                     />
 
                                                 </large>

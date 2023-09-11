@@ -48,7 +48,7 @@ const HeaderComponent = () => {
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" onClick={() => {
                                         localStorage.removeItem("token")
-                                        navigate("/")
+                                        window.location.href = "/";
                                     }}>
                                         <img src={logoutImg} alt="user" className='list-img-icons' />
                                         Logout

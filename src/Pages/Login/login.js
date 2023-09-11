@@ -58,7 +58,7 @@ function LoginForm() {
                 // console.log(result, "Authsession")
                 // if (result) {
                     setShowLoader(false)
-                    navigate("/dashboard")
+                    window.location.href = "/dashboard";
                 // }
                 // else {
                 //     setShowLoader(false)
