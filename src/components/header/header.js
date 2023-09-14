@@ -39,12 +39,7 @@ const HeaderComponent = () => {
                                     <a class="dropdown-item" href="/profile">
                                         <img src={userImg} alt="user" className='list-img-icons' />
                                         Account
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/settings">
-                                        <img src={settingImg} alt="user" className='list-img-icons' />
-                                        Settings
-                                    </a>
+                                    </a>                                   
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" onClick={() => {
                                         localStorage.removeItem("token")
