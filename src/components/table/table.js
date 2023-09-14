@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Image, Card } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faEye, faSearch } from '@fortawesome/free-solid-svg-icons';
 import './table.css';
 import { defaultImageUrl } from '../header/header';
 import fetchAllUsers from '../../Services/getAllUser';
-import { Dropdown, DropdownButton } from 'react-bootstrap';
-import { Modal, Button } from 'react-bootstrap';
 import adminActiveUser from '../../Services/getActiveUser';
 import adminInActiveUser from '../../Services/getInActiveUser';
 import Loader from '../Loader/Loader';
@@ -14,7 +8,15 @@ import deleteUserByAdmin from '../../Services/deleteUserByAdmin';
 import ViewUserDetails from '../../Services/getViewUserDetails';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import React,
+{
+    useState, useEffect,
+    Table,Image, Card, Button,
+    Form, Modal, FontAwesomeIcon,
+    Dropdown, DropdownButton,
+    faTrashAlt, faEdit, faEye, faSearch
+}
+    from "../../Services/Imports/ImportsItems";
 const UserTableComp = () => {
     const { page } = useParams();
     const [users, setUsers] = useState([]);

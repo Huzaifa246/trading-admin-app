@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Card, Button, Form, Modal } from 'react-bootstrap';
+import { Table, Card, Button, Form, Modal, Dropdown, DropdownButton, Image } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEdit, faEye, faSearch  } from '@fortawesome/free-solid-svg-icons';
 import { DateRange } from 'react-date-range';
 import { Calendar } from 'react-feather';
 
@@ -15,7 +15,9 @@ export {
   Form,
   Modal,
   FontAwesomeIcon,
-  faSearch,
+  faTrashAlt, faEdit, faEye, faSearch,
   DateRange,
   Calendar,
+  Dropdown, DropdownButton,
+  Image
 };
