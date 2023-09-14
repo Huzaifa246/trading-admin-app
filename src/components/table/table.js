@@ -11,8 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React,
 {
     useState, useEffect,
-    Table,Image, Card, Button,
-    Form, Modal, FontAwesomeIcon,
+    Table, Image, Card, Button, Modal, FontAwesomeIcon,
     Dropdown, DropdownButton,
     faTrashAlt, faEdit, faEye, faSearch
 }
@@ -42,7 +41,7 @@ const UserTableComp = () => {
     };
 
     const handleConfirmStatusChange = async (status, usersArr) => {
-        console.log("Changing status to:", status);
+        // console.log("Changing status to:", status);
         setModalShow(false);
         // console.log(usersArr,"id")
         try {
@@ -114,20 +113,15 @@ const UserTableComp = () => {
     const handleViewUser = async (userId) => {
         try {
             const userDetailsResponse = await ViewUserDetails(userId);
-            setViewModalShow(true);
             const userDetails = userDetailsResponse.data;
-            console.log(userDetails)
+            console.log(userDetails, "view")
             setSelectedUserViewDetails(userDetails);
+            setViewModalShow(true);
         } catch (error) {
             console.error('Error Viewing user:', error);
             setViewModalShow(false)
         }
     };
-    //  const usersArr = users.data;
-    // for (const user of users) {
-    //     console.log(user._id, "User id");
-    //   }
-    console.log(users, "sad")
 
     return (
         <>
@@ -173,22 +167,38 @@ const UserTableComp = () => {
                 <Modal.Body>
                     {selectedUserViewDetails && (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                            <div className='View-inner-style'>
                                 <p><b>Name:</b></p>
-                                <p>{selectedUserViewDetails.fullName}</p>
+                                <p>{selectedUserViewDetails?.fullName}</p>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                            <div className='View-inner-style'>
                                 <p><b>Email:</b></p>
-                                <p>{selectedUserViewDetails.email}</p>
+                                <p>{selectedUserViewDetails?.email}</p>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                            <div className='View-inner-style'>
+                                <p><b>Binance Id:</b></p>
+                                <p>{selectedUserViewDetails?.binance_id || "No Id"}</p>
+                            </div>
+                            <div className='View-inner-style'>
                                 <p><b>Total Balance:</b></p>
-                                <p>{selectedUserViewDetails.totalbalance}</p>
+                                <p>{selectedUserViewDetails?.totalbalance}</p>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: "100%" }}>
+                            <div className='View-inner-style'>
                                 <p><b>Withdrawable:</b></p>
-                                <p>{selectedUserViewDetails.withdrawable}</p>
+                                <p>{selectedUserViewDetails?.withdrawable.toFixed(2)}</p>
                             </div>
+                            <div className='View-inner-style'>
+                                <p><b>InvestmentBalance:</b></p>
+                                <p>{selectedUserViewDetails?.investmentBalance}</p>
+                            </div>
+                            <div className='View-inner-style'>
+                                <p><b>Profit:</b></p>
+                                <p>{selectedUserViewDetails?.profit}</p>
+                            </div>
+                            <div className='View-inner-style'>
+                                <p><b>Status:</b></p>
+                                <p>{selectedUserViewDetails?.status}</p>
+                            </div>                    
                         </div>
                     )}
                 </Modal.Body>
@@ -300,9 +310,10 @@ const UserTableComp = () => {
                                                     <FontAwesomeIcon
                                                         icon={faEye}
                                                         className="view-icon"
-                                                        onClick={() =>{
+                                                        onClick={() => {
                                                             setViewModalShow(true);
-                                                            handleViewUser(item._id)}}
+                                                            handleViewUser(item._id)
+                                                        }}
                                                     />
 
                                                 </large>
@@ -320,34 +331,33 @@ const UserTableComp = () => {
                         </Table>
                     )}
                 </div>
-                <div className="pagination-invest-container">
+                <div className="pagination-User-container">
                     {currentPage > 1 && (
                         <Button
                             variant="secondary"
-                            onClick={() => setCurrentPage(currentPage - 1)}
+                            onClick={() => handlePageChange(currentPage - 1)}
                         >
-                            Back
+                            {currentPage - 1}
                         </Button>
                     )}
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <Button
-                            key={index}
-                            variant={currentPage === index + 1 ? "primary" : "secondary"}
-                            onClick={() => setCurrentPage(index + 1)}
-                        >
-                            {index + 1}
-                        </Button>
-                    ))}
+                    <Button
+                        key={currentPage}
+                        variant="primary"
+                        onClick={() => handlePageChange(currentPage)}
+                    >
+                        {currentPage}
+                    </Button>
                     {currentPage < totalPages && (
                         <Button
                             variant="primary"
-                            onClick={() => setCurrentPage(currentPage + 1)}
+                            onClick={() => handlePageChange(currentPage + 1)}
                         >
-                            Next
+                            {currentPage + 1}
                         </Button>
                     )}
                 </div>
             </Card>
+
         </>
     );
 }

@@ -140,3 +140,11 @@ td {
   pointer-events: none; /* Disable click events on the icon */
   opacity: 0.3; /* Reduce opacity to visually indicate it's disabled */
 }
+.pagination-User-container {
+  text-align: center;
+}
+.View-inner-style{
+  display: flex; 
+  justify-content: space-between;
+  width: 100%;
+}

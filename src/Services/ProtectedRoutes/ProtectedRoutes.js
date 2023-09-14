@@ -1,5 +1,4 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 
 const isUserLoggedIn = () => {
   const token = localStorage.getItem('token');
@@ -10,7 +9,8 @@ const ProtectedRoutes = ({ element }) => {
   if (isUserLoggedIn()) {
     return element;
   } else {
-    return <Navigate to="/" replace />;
+    // return <Navigate to="/" replace />;
+    return window.location.href = '/';
   }
 };
 

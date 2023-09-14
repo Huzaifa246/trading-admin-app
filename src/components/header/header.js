@@ -41,7 +41,7 @@ const HeaderComponent = () => {
                                         Account
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/">
+                                    <a class="dropdown-item" href="/settings">
                                         <img src={settingImg} alt="user" className='list-img-icons' />
                                         Settings
                                     </a>

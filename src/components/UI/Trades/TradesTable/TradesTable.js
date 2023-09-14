@@ -577,7 +577,7 @@ const TradesTable = () => {
                             )
                         )}
                     </div>
-                    <div className="pagination-container">
+                    {/* <div className="pagination-container">
                         {Array.from({ length: totalPages }).map((_, index) => (
                             <Button
                                 key={index}
@@ -587,6 +587,33 @@ const TradesTable = () => {
                                 {index + 1}
                             </Button>
                         ))}
+                    </div> */}
+                    <div className="pagination-invest-container">
+                        {pageNumber > 1 && (
+                            <Button
+                                variant="secondary"
+                                onClick={() => setPageNumber(pageNumber - 1)}
+                            >
+                                Back
+                            </Button>
+                        )}
+                        <Button
+                            variant={pageNumber ? "primary" : "secondary"}
+                            onClick={() => setPageNumber(pageNumber)}
+                        >
+                            {pageNumber}
+                        </Button>
+                        <Button
+                            variant={pageNumber === totalPages + 1 ? "primary" : "secondary"}
+                            onClick={() => {
+                                if (dataCurrentUserT?.length) {
+                                    setPageNumber(pageNumber + 1);
+                                }
+                            }}
+                        >
+                            {pageNumber + 1}
+                        </Button>
+
                     </div>
                 </Card>
 

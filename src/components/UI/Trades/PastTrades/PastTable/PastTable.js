@@ -229,16 +229,32 @@ function PastTable() {
                         </Table>
                     )
                 )}
-                <div className="pagination-container">
-                    {Array.from({ length: totalPages }).map((_, index) => (
+                <div className="pagination-invest-container">
+                    {pageNumber > 1 && (
                         <Button
-                            key={index}
-                            variant={index + 1 === pageNumber ? 'primary' : 'secondary'}
-                            onClick={() => setPageNumber(index + 1)}
+                            variant="secondary"
+                            onClick={() => setPageNumber(pageNumber - 1)}
                         >
-                            {index + 1}
+                            Back
                         </Button>
-                    ))}
+                    )}
+                    <Button
+                        variant={pageNumber ? "primary" : "secondary"}
+                        onClick={() => setPageNumber(pageNumber)}
+                    >
+                        {pageNumber}
+                    </Button>
+                    <Button
+                        variant={pageNumber === totalPages + 1 ? "primary" : "secondary"}
+                        onClick={() => {
+                            if (pastUserTradeData?.length) {
+                                setPageNumber(pageNumber + 1);
+                            }
+                        }}
+                    >
+                        {pageNumber + 1}
+                    </Button>
+
                 </div>
             </Card>
         </>
