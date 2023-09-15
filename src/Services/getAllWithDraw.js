@@ -2,14 +2,14 @@ import axios from 'axios';
 import { decryption } from './encryptionDecryption';
 import { AdminHeader } from './header';
 
-async function getAllWithDraw(pageNumber, status, search = "") {
+async function getAllWithDraw(pageNumber, status, searchQuery = "") {
     try {
         let url = `${process.env.REACT_APP_API}/api/admin/get-all-withdraw/${pageNumber}?status=${status}`;
         
         const queryParams = [];
 
-        if (search !== "") {
-            queryParams.push(`search=${encodeURIComponent(search)}`);
+        if (searchQuery !== "") {
+            queryParams.push(`search=${encodeURIComponent(searchQuery)}`);
         }
 
         if (queryParams.length > 0) {
